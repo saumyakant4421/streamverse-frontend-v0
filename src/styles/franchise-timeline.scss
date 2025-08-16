@@ -1,0 +1,103 @@
+
+.timeline-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 1.5rem auto;
+  padding: 1rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: transparent;
+    border-radius: 8px;
+  }
+
+  .movie-group {
+    cursor: pointer;
+
+    circle {
+      transition: r 0.2s ease, filter 0.2s ease;
+    }
+
+    text {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px; // Slightly larger for readability
+      fill: #e0e0e0;
+      pointer-events: none;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.5); // Subtle shadow for contrast
+      dominant-baseline: middle; // Center text vertically
+    }
+
+    &:focus {
+      outline: none;
+      circle {
+        stroke: #2563eb;
+        stroke-width: 2;
+      }
+    }
+  }
+
+  .year-ticks {
+    .year-tick {
+      stroke: rgba(255, 255, 255, 0.3);
+    }
+
+    .year-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      fill: #e0e0e0;
+      font-weight: 500;
+    }
+  }
+
+  .tooltip {
+    rect {
+      fill: rgba(20, 20, 20, 0.8);
+      stroke: rgba(37, 99, 235, 0.3);
+      stroke-width: 1;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    text {
+      font-family: 'Inter', sans-serif;
+      fill: #ffffff;
+      dominant-baseline: middle;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .timeline-container {
+    padding: 0.5rem;
+    margin: 1rem auto;
+
+    .year-ticks {
+      .year-tick {
+        stroke-width: 0.8;
+      }
+
+      .year-label {
+        font-size: 12px;
+      }
+    }
+
+    .movie-group {
+      text {
+        font-size: 12px;
+      }
+    }
+
+    .tooltip {
+      text {
+        font-size: 12px;
+      }
+    }
+  }
+}

@@ -1,0 +1,755 @@
+@use "sass:color";
+
+// Theme Variables
+$primary-color: #e50914; // Netflix-inspired red
+$accent-color: #2e6bff; // Blue for interactive elements
+$bg-dark: #0f0f0f;
+$card-bg: rgba(255, 255, 255, 0.05);
+$text-primary: #ffffff;
+$text-secondary: #aaaaaa;
+$border-color: rgba(255, 255, 255, 0.1);
+$shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+$transition: all 0.3s ease;
+$neon-glow: #00ffcc; // Neon cyan for button effects
+$neon-pink: #ff007a; // Neon pink for gradient
+
+// Typography
+$font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+$font-size-base: 16px;
+$font-size-h1: 2.5rem;
+$font-size-h2: 1.8rem;
+$font-size-h3: 1.2rem;
+
+// Breakpoints
+$mobile: 768px;
+$desktop: 1200px;
+
+// Animations
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes neon-flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+// Global Styles
+.recommendation-page {
+  min-height: 100vh;
+  background-color: $bg-dark;
+  color: $text-primary;
+  font-family: $font-stack;
+  font-size: $font-size-base;
+  padding: 2rem;
+  overflow-x: hidden;
+
+  .recommendation-container {
+    max-width: $desktop;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .title-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    h1 {
+      font-size: $font-size-h1;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+  }
+
+  .back-to-home-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: linear-gradient(145deg, $neon-glow, $neon-pink);
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba($neon-glow, 0.3);
+    cursor: pointer;
+    transition: $transition;
+    font-family: $font-stack;
+    font-size: 16px;
+    font-weight: 500;
+    color: $text-primary;
+    text-decoration: none;
+
+    .arrow-icon {
+      font-size: 20px;
+      color: $text-primary;
+      transition: $transition;
+    }
+
+    &:hover {
+      background: linear-gradient(145deg, $neon-pink, $neon-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba($neon-glow, 0.5);
+      animation: neon-flicker 1.5s infinite;
+
+      .arrow-icon {
+        transform: translateX(-4px);
+      }
+    }
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid $border-color;
+
+    button {
+      background: none;
+      border: none;
+      color: $text-secondary;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 0.5rem 0.5rem 0 0;
+      transition: $transition;
+      position: relative;
+
+      &:hover {
+        color: $text-primary;
+        background-color: $card-bg;
+      }
+
+      &.active {
+        color: $text-primary;
+        background-color: $primary-color;
+        box-shadow: inset 0 -2px 0 $primary-color;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: $primary-color;
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      &.active::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  .personalized-container {
+    background-color: $card-bg;
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid $border-color;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+
+      h2 {
+        font-size: $font-size-h2;
+        font-weight: 500;
+      }
+
+      .refresh-icon {
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: $transition;
+        color: $accent-color;
+
+        &:hover {
+          color: color.adjust($accent-color, $lightness: 10%);
+          transform: rotate(180deg);
+        }
+
+        &.spinning {
+          animation: spin 1s linear infinite;
+        }
+      }
+    }
+  }
+
+  .chat-container {
+    background-color: $card-bg;
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid $border-color;
+
+    h2 {
+      font-size: $font-size-h2;
+      margin-bottom: 1.5rem;
+    }
+
+    .chat-history {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 1rem;
+      background-color: color.adjust($bg-dark, $lightness: 5%);
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: $accent-color $card-bg;
+
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $card-bg;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $accent-color;
+        border-radius: 4px;
+      }
+
+      .message-user {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: flex-end;
+        margin-bottom: 1rem;
+        animation: fadeIn 0.3s ease;
+
+        .user-avatar {
+          background-color: $accent-color;
+          color: $text-primary;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.9rem;
+          font-weight: 600;
+          margin-left: 0.5rem;
+          flex-shrink: 0;
+        }
+
+        .user-message-bubble {
+          background-color: rgba($accent-color, 0.2);
+          padding: 0.75rem;
+          border-radius: 0.5rem;
+          max-width: 70%;
+          color: $text-primary;
+          align-self: flex-end;
+          text-align: right;
+
+          .font-semibold {
+            font-weight: 600;
+          }
+
+          .text-xs {
+            font-size: 0.75rem;
+            color: $text-secondary;
+            margin-top: 0.25rem;
+          }
+        }
+      }
+
+      .message-bot {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        margin-bottom: 1rem;
+        animation: fadeIn 0.3s ease;
+
+        .bot-avatar {
+          background-color: color.adjust($bg-dark, $lightness: 10%);
+          color: $text-primary;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.9rem;
+          font-weight: 600;
+          margin-right: 0.5rem;
+          flex-shrink: 0;
+        }
+
+        .bot-message-bubble {
+          background-color: rgba($text-secondary, 0.1);
+          padding: 0.75rem;
+          border-radius: 0.5rem;
+          max-width: 70%;
+          color: $text-primary;
+          align-self: flex-start;
+          text-align: left;
+
+          p {
+            margin: 0 0 0.5rem;
+          }
+
+          .text-xs {
+            font-size: 0.75rem;
+            color: $text-secondary;
+            margin-top: 0.25rem;
+          }
+        }
+      }
+    }
+
+    .input-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+
+      input {
+        background-color: color.adjust($bg-dark, $lightness: 5%);
+        border: 1px solid $border-color;
+        padding: 0.75rem;
+        flex: 1;
+        border-radius: 0.5rem 0 0 0.5rem;
+        color: $text-primary;
+        font-size: 1rem;
+        transition: $transition;
+
+        &:focus {
+          outline: none;
+          border-color: $accent-color;
+          box-shadow: 0 0 0 2px rgba($accent-color, 0.3);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      .send-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(145deg, $neon-glow, $neon-pink);
+        border: none;
+        border-radius: 0 0.5rem 0.5rem 0;
+        color: $text-primary;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: $transition;
+        box-shadow: 0 4px 12px rgba($neon-glow, 0.3);
+        animation: neon-flicker 1.5s infinite;
+
+        &:hover:not(:disabled) {
+          background: linear-gradient(145deg, $neon-pink, $neon-glow);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba($neon-glow, 0.5);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .query-suggestions {
+      margin-top: 1rem;
+      color: $text-secondary;
+      font-size: 0.9rem;
+
+      p {
+        margin-bottom: 0.5rem;
+      }
+
+      .suggestions-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .suggestion-btn {
+        background-color: $card-bg;
+        border: 1px solid $border-color;
+        color: $text-primary;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: $transition;
+
+        &:hover {
+          background-color: $accent-color;
+          color: $text-primary;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  .recommendations-container {
+    background-color: $card-bg;
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid $border-color;
+
+    h2 {
+      font-size: $font-size-h2;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    color: $text-secondary;
+
+    .spinner {
+      width: 2rem;
+      height: 2rem;
+      border: 3px solid $accent-color;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  .error-message {
+    background-color: rgba($primary-color, 0.2);
+    color: color.adjust($primary-color, $lightness: 20%);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      color: $primary-color;
+      font-weight: 500;
+      cursor: pointer;
+      transition: $transition;
+
+      &:hover {
+        color: color.adjust($primary-color, $lightness: 10%);
+        animation: bounce 0.3s;
+      }
+    }
+  }
+
+  .recommendations-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+
+    &.personalized {
+      grid-template-columns: repeat(5, 1fr);
+
+      @media (max-width: $desktop) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media (max-width: $mobile) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &.chat {
+      grid-template-columns: repeat(5, 1fr);
+
+      @media (max-width: $desktop) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media (max-width: $mobile) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .movie-card {
+      background-color: $card-bg;
+      border-radius: 0.75rem;
+      height: 400px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: $transition;
+      position: relative;
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: $shadow;
+
+        .movie-poster img {
+          transform: scale(1.1);
+        }
+
+        .movie-overlay {
+          opacity: 1;
+        }
+      }
+
+      .movie-poster {
+        position: relative;
+        padding-top: 150%;
+        overflow: hidden;
+        background-color: color.adjust($bg-dark, $lightness: -5%);
+
+        img {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease;
+        }
+
+        .no-poster {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: color.adjust($bg-dark, $lightness: -5%);
+          color: $text-secondary;
+          font-size: 0.9rem;
+          text-align: center;
+        }
+
+        .rating-badge {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: #ffd700;
+          padding: 5px 8px;
+          border-radius: 5px;
+          font-weight: bold;
+          font-size: 0.9em;
+        }
+      }
+
+      .movie-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba($bg-dark, 0.9), transparent);
+        display: flex;
+        align-items: flex-end;
+        padding: 1rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+
+        .movie-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          color: $text-primary;
+          font-size: 0.9rem;
+
+          .rating {
+            color: #ffd700;
+            font-weight: 600;
+          }
+
+          .genres {
+            color: $text-secondary;
+            font-size: 0.85rem;
+          }
+        }
+      }
+
+      .movie-info {
+        padding: 1rem;
+
+        h3 {
+          margin: 0;
+          font-size: $font-size-h3;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .year {
+          color: $text-secondary;
+          font-size: 0.9rem;
+        }
+
+        .text-sm {
+          font-size: 0.875rem;
+          color: $text-secondary;
+          margin-top: 0.5rem;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .text-blue-600 {
+          color: $accent-color;
+          font-size: 0.875rem;
+          margin-top: 0.5rem;
+        }
+
+        .feedback-buttons {
+          display: flex;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+
+          button {
+            background: none;
+            border: none;
+            color: $text-secondary;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: $transition;
+
+            &:hover {
+              color: $accent-color;
+              transform: scale(1.2);
+              animation: pulse 0.3s;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    color: $text-secondary;
+    font-size: 1.2rem;
+    padding: 2rem;
+    background-color: $card-bg;
+    border-radius: 0.75rem;
+    margin-top: 1.5rem;
+    animation: fadeIn 0.5s ease;
+  }
+}
+
+// Responsive Design
+@media (max-width: $mobile) {
+  .recommendation-page {
+    padding: 1rem;
+
+    .recommendation-container {
+      padding: 1rem;
+
+      .header-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        .title-wrapper {
+          width: 100%;
+          justify-content: center;
+        }
+
+        h1 {
+          font-size: 2rem;
+          text-align: center;
+        }
+
+        .back-to-home-btn {
+          padding: 8px 12px;
+          font-size: 14px;
+
+          .arrow-icon {
+            font-size: 18px;
+          }
+        }
+      }
+
+      .tabs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        button {
+          padding: 0.5rem 1rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      .chat-container,
+      .recommendations-container,
+      .personalized-container {
+        padding: 1rem;
+
+        h2 {
+          font-size: 1.5rem;
+        }
+      }
+
+      .chat-history {
+        .message-user,
+        .message-bot {
+          .user-message-bubble,
+          .bot-message-bubble {
+            max-width: 85%;
+          }
+        }
+      }
+    }
+  }
+}

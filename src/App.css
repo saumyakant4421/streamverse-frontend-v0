@@ -1,0 +1,18 @@
+.App {
+  background: var(--primary-bg);
+  color: var(--text-color);
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.App-header {
+  background: var(--secondary-bg);
+  padding: 20px;
+  text-align: center;
+}
+
+.App-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}

@@ -1,0 +1,146 @@
+{
+  "franchises": [
+    {
+      "id": "mcu",
+      "name": "Marvel Cinematic Universe (MCU)",
+      "overview": "The Marvel Cinematic Universe is a sprawling superhero saga, weaving interconnected stories of iconic characters like Iron Man, Captain America, and the Avengers across multiple films, battling cosmic threats and personal struggles.",
+      "movies": [
+        { "id": 1726, "title": "Iron Man" },
+        { "id": 1724, "title": "The Incredible Hulk" },
+        { "id": 10138, "title": "Iron Man 2" },
+        { "id": 10195, "title": "Thor" },
+        { "id": 1771, "title": "Captain America: The First Avenger" },
+        { "id": 24428, "title": "The Avengers" },
+        { "id": 68721, "title": "Iron Man 3" },
+        { "id": 76338, "title": "Thor: The Dark World" },
+        { "id": 100402, "title": "Captain America: The Winter Soldier" },
+        { "id": 118340, "title": "Guardians of the Galaxy" },
+        { "id": 99861, "title": "Avengers: Age of Ultron" },
+        { "id": 102899, "title": "Ant-Man" },
+        { "id": 271110, "title": "Captain America: Civil War" },
+        { "id": 284052, "title": "Doctor Strange" },
+        { "id": 283995, "title": "Guardians of the Galaxy Vol. 2" },
+        { "id": 315635, "title": "Spider-Man: Homecoming" },
+        { "id": 284053, "title": "Thor: Ragnarok" },
+        { "id": 284054, "title": "Black Panther" },
+        { "id": 299536, "title": "Avengers: Infinity War" },
+        { "id": 363088, "title": "Ant-Man and the Wasp" },
+        { "id": 299537, "title": "Captain Marvel" },
+        { "id": 299534, "title": "Avengers: Endgame" },
+        { "id": 429617, "title": "Spider-Man: Far From Home" },
+        { "id": 497698, "title": "Black Widow" },
+        { "id": 566525, "title": "Shang-Chi and the Legend of the Ten Rings" },
+        { "id": 524434, "title": "Eternals" },
+        { "id": 634649, "title": "Spider-Man: No Way Home" },
+        { "id": 453395, "title": "Doctor Strange in the Multiverse of Madness" },
+        { "id": 616037, "title": "Thor: Love and Thunder" },
+        { "id": 505642, "title": "Black Panther: Wakanda Forever" },
+        { "id": 640146, "title": "Ant-Man and the Wasp: Quantumania" },
+        { "id": 447365, "title": "Guardians of the Galaxy Vol. 3" },
+        { "id": 609681, "title": "The Marvels" },
+        { "id": 533535, "title": "Deadpool & Wolverine" },
+        { "id": 822119, "title": "Captain America: Brave New World" },
+        { "id": 986056, "title": "Thunderbolts*" },
+        { "id": 617126, "title": "The Fantastic Four: First Steps" },
+        { "id": 969681, "title": "Spider-Man: Brand New Day" },
+        { "id": 1003596, "title": "Avengers: Doomsday" },
+        { "id": 1003598, "title": "Avengers: Secret Wars" }
+      ]
+    },
+    {
+      "id": "dceu",
+      "name": "DC Extended Universe (DCEU)",
+      "overview": "The DC Extended Universe brings gritty, epic tales of DC Comics heroes like Superman, Batman, and Wonder Woman, exploring their battles against villains and complex moral dilemmas in a shared cinematic world.",
+      "movies": [
+        { "id": 49521, "title": "Man of Steel" },
+        { "id": 209112, "title": "Batman v Superman: Dawn of Justice" },
+        { "id": 297761, "title": "Suicide Squad" },
+        { "id": 297762, "title": "Wonder Woman" },
+        { "id": 141052, "title": "Justice League" },
+        { "id": 297802, "title": "Aquaman" },
+        { "id": 287947, "title": "Shazam!" },
+        { "id": 495764, "title": "Birds of Prey (and the Fantabulous Emancipation of One Harley Quinn)" },
+        { "id": 464052, "title": "Wonder Woman 1984" },
+        { "id": 791373, "title": "Zack Snyder’s Justice League" },
+        { "id": 436969, "title": "The Suicide Squad" },
+        { "id": 436270, "title": "Black Adam" },
+        { "id": 594767, "title": "Shazam! Fury of the Gods" },
+        { "id": 298618, "title": "The Flash" },
+        { "id": 565770, "title": "Blue Beetle" },
+        { "id": 572802, "title": "Aquaman and the Lost Kingdom" }
+      ]
+    },
+    {
+      "id": "dcu",
+      "name": "DC Universe (DCU)",
+      "overview": "The DC Universe is a rebooted cinematic franchise, launching with Superman and expanding into bold, interconnected stories featuring heroes like The Authority and Batman in a fresh, unified vision.",
+      "movies": [
+        { "id": 1061474, "title": "Superman" },
+        { "id": 1081003, "title": "Supergirl: Woman Of Tomorrow" },
+        { "id": null, "title": "The Authority" },
+        { "id": null, "title": "The Brave and the Bold" }
+      ]
+    },
+    {
+      "id": "starwars",
+      "name": "Star Wars",
+      "overview": "Star Wars is a legendary space opera franchise, chronicling the Skywalker saga and standalone adventures in a galaxy far, far away, filled with Jedi, Sith, and epic battles.",
+      "movies": [
+        { "id": 11, "title": "Star Wars: Episode IV – A New Hope" },
+        { "id": 1891, "title": "Star Wars: Episode V – The Empire Strikes Back" },
+        { "id": 1892, "title": "Star Wars: Episode VI – Return of the Jedi" },
+        { "id": 1893, "title": "Star Wars: Episode I – The Phantom Menace" },
+        { "id": 1894, "title": "Star Wars: Episode II – Attack of the Clones" },
+        { "id": 1895, "title": "Star Wars: Episode III – Revenge of the Sith" },
+        { "id": 140607, "title": "Star Wars: The Force Awakens" },
+        { "id": 330459, "title": "Rogue One: A Star Wars Story" },
+        { "id": 181808, "title": "Star Wars: The Last Jedi" },
+        { "id": 348350, "title": "Solo: A Star Wars Story" },
+        { "id": 181812, "title": "Star Wars: The Rise of Skywalker" },
+        { "id": 1228710, "title": "The Mandalorian & Grogu" }
+      ]
+    },
+    {
+      "id": "aliens",
+      "name": "Aliens",
+      "overview": "The Aliens franchise is a chilling sci-fi horror series, centered on humanity’s encounters with the deadly Xenomorphs, blending intense action and existential dread across spacefaring tales.",
+      "movies": [
+        { "id": 679, "title": "Alien" },
+        { "id": 348, "title": "Aliens" },
+        { "id": 8077, "title": "Alien³" },
+        { "id": 8078, "title": "Alien Resurrection" },
+        { "id": 70981, "title": "Prometheus" },
+        { "id": 126889, "title": "Alien: Covenant" },
+        { "id": 945961, "title": "Alien: Romulus" }
+      ]
+    },
+    {
+      "id": "harrypotter",
+      "name": "Harry Potter",
+      "overview": "Harry Potter is a magical film series following the young wizard Harry and his friends as they battle dark forces at Hogwarts, exploring themes of friendship, courage, and destiny.",
+      "movies": [
+        { "id": 671, "title": "Harry Potter and the Philosopher's Stone" },
+        { "id": 672, "title": "Harry Potter and the Chamber of Secrets" },
+        { "id": 673, "title": "Harry Potter and the Prisoner of Azkaban" },
+        { "id": 674, "title": "Harry Potter and the Goblet of Fire" },
+        { "id": 675, "title": "Harry Potter and the Order of the Phoenix" },
+        { "id": 767, "title": "Harry Potter and the Half-Blood Prince" },
+        { "id": 12444, "title": "Harry Potter and the Deathly Hallows: Part 1" },
+        { "id": 12445, "title": "Harry Potter and the Deathly Hallows: Part 2" }
+      ]
+    },
+    {
+      "id": "lotr",
+      "name": "Lord of the Rings",
+      "overview": "The Lord of the Rings is an epic fantasy saga, depicting the quest to destroy the One Ring and defeat Sauron, set in the richly crafted world of Middle-earth.",
+      "movies": [
+        { "id": 120, "title": "The Lord of the Rings: The Fellowship of the Ring" },
+        { "id": 121, "title": "The Lord of the Rings: The Two Towers" },
+        { "id": 122, "title": "The Lord of the Rings: The Return of the King" },
+        { "id": 49051, "title": "The Hobbit: An Unexpected Journey" },
+        { "id": 57158, "title": "The Hobbit: The Desolation of Smaug" },
+        { "id": 122917, "title": "The Hobbit: The Battle of the Five Armies" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,327 @@
+
+/* Global styles for the franchise page */
+.franchise-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: #0a0a0a; /* Deep black background */
+  color: #e0e0e0; /* Light gray text for contrast */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
+
+  /* First blurred gradient blob */
+  &::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(
+      circle,
+      rgba(37, 99, 235, 0.3) 0%,
+      rgba(147, 51, 234, 0.2) 50%,
+      transparent 100%
+    );
+    filter: blur(100px);
+    border-radius: 50%;
+    animation: float1 40s infinite ease-in-out; /* Slower speed */
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Second blurred gradient blob */
+  &::after {
+    content: '';
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(
+      circle,
+      rgba(236, 72, 153, 0.3) 0%, /* Pinkish tone */
+      rgba(59, 130, 246, 0.2) 50%,
+      transparent 100%
+    );
+    filter: blur(80px);
+    border-radius: 50%;
+    animation: float2 40s infinite ease-in-out; /* Slower speed */
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Ensure content is above the gradient blobs */
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Third blurred gradient blob (via JSX) */
+.gradient-blob {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(
+    circle,
+    rgba(74, 222, 128, 0.3) 0%, /* Greenish tone */
+    rgba(34, 211, 238, 0.2) 50%,
+    transparent 100%
+  );
+  filter: blur(120px);
+  border-radius: 50%;
+  animation: float3 40s infinite ease-in-out; /* Slower speed */
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Animation for the first gradient blob (focus on upper-left to mid-right) */
+@keyframes float1 {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translate(40vw, 10vh);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(70vw, 30vh);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translate(20vw, 50vh);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.8;
+  }
+}
+
+/* Animation for the second gradient blob (focus on mid-left to lower-right) */
+@keyframes float2 {
+  0% {
+    transform: translate(20vw, 40vh);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translate(60vw, 70vh); /* Lower part of the page */
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(30vw, 90vh); /* Bottom of the page */
+    opacity: 0.7;
+  }
+  75% {
+    transform: translate(10vw, 60vh);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(20vw, 40vh);
+    opacity: 0.7;
+  }
+}
+
+/* Animation for the third gradient blob (focus on lower-left to mid-right) */
+@keyframes float3 {
+  0% {
+    transform: translate(10vw, 80vh); /* Start at the lower part */
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(50vw, 50vh);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(80vw, 70vh); /* Lower part of the page */
+    opacity: 0.6;
+  }
+  75% {
+    transform: translate(30vw, 90vh); /* Bottom of the page */
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(10vw, 80vh);
+    opacity: 0.6;
+  }
+}
+
+/* Franchise header */
+.franchise-header {
+  display: grid;
+  grid-template-columns: 1fr 320px; /* Maintain original alignment */
+  gap: 2.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: transparent; /* Remove heavy background for minimalism */
+  border-radius: 12px;
+
+  .franchise-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 600; /* Slightly lighter weight for modern look */
+    margin: 0;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+
+  .franchise-poster {
+    width: 100%;
+    max-width: 320px; /* Maintain original size */
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+    }
+  }
+
+  .franchise-overview {
+    font-size: 1rem;
+    color: #a0a0a0;
+    margin: 0;
+    max-width: 600px;
+  }
+}
+
+/* Franchise section */
+.franchise-section {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(37, 99, 235, 0.3); /* Thinner border for minimalism */
+  }
+}
+
+/* Franchise details */
+.franchise-details {
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 1rem 0 0.75rem;
+  }
+
+  .movie-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+
+    .movie-item {
+      font-size: 1rem;
+      color: #d1d5db;
+      padding: 0.5rem 0.75rem;
+      background: rgba(20, 20, 20, 0.8);
+      border-radius: 8px;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba(37, 99, 235, 0.2);
+      }
+    }
+  }
+
+  .person-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Maintain original grid */
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .person-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(20, 20, 20, 0.8);
+      padding: 0.5rem;
+      border-radius: 10px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      min-height: 84px; /* Maintain visibility */
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      }
+
+      .person-image {
+        width: 56px;
+        height: 84px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .person-name {
+        font-size: 0.95rem;
+        color: #e0e0e0;
+        font-weight: 400; /* Lighter weight for modern look */
+      }
+    }
+  }
+
+  p {
+    font-size: 1rem;
+    color: #a0a0a0;
+  }
+}
+
+/* Loading and error states */
+.loading-spinner {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #2563eb;
+  padding: 1.5rem;
+  animation: pulse 1.5s ease-in-out infinite;
+
+  @keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
+}
+
+.error-message {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #ef4444;
+  padding: 1.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .franchise-page {
+    padding: 1rem;
+
+    .franchise-header {
+      grid-template-columns: 1fr; /* Maintain original responsive behavior */
+      text-align: center;
+      padding: 1rem;
+
+      .franchise-poster {
+        margin: 1.5rem auto;
+        max-width: 240px;
+      }
+    }
+
+    .franchise-details {
+      .person-list {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Maintain original responsive grid */
+      }
+    }
+  }
+}

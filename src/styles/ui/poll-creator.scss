@@ -1,0 +1,447 @@
+$dark-bg: #000000;
+$dark-surface: #1a1a1a;
+$dark-surface-light: #2a2a2a;
+$dark-text: #ffffff;
+$dark-text-secondary: #999999;
+$dark-border: #333333;
+
+$light-bg: #ffffff;
+$light-surface: #f8f9fa64;
+$light-surface-light: #ffffff;
+$light-text: #000000;
+$light-text-secondary: #666666;
+$light-border: #e1e5e9;
+
+$accent-yellow: #ffeb3b;
+$accent-blue: #1976d2;
+$accent-green: #4caf50;
+$accent-red: #f44336;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin glass-card {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 1.5rem;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 12px 32px 0 rgba(31, 38, 135, 0.18);
+  }
+}
+
+.poll-creator-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.poll-creator-dialog {
+  @include glass-card;
+  max-width: 500px;
+  width: 90%;
+  background: rgba(10, 10, 20, 0.35);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: $dark-text;
+
+  &.light {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: $light-text;
+  }
+
+  .poll-dialog-header {
+    @include flex-between;
+    padding: 0 0 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &.light {
+      border-bottom: 1px solid $light-border;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      background: linear-gradient(45deg, $accent-yellow, #ffd700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 0;
+    }
+
+    .poll-random-button,
+    .poll-close-button {
+      background: none;
+      border: none;
+      color: $accent-yellow;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: background 0.2s;
+
+      &.light {
+        color: $accent-blue;
+      }
+
+      &:hover {
+        background: rgba(255, 235, 59, 0.2);
+        &.light {
+          background: rgba(25, 118, 210, 0.2);
+        }
+      }
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  .poll-dialog-content {
+    padding: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .poll-question-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .poll-question-select,
+    .poll-question-input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid $dark-border;
+      border-radius: 8px;
+      padding: 0.75rem;
+      color: $dark-text;
+      font-size: 1rem;
+      outline: none;
+
+      &.light {
+        background: rgba(0, 0, 0, 0.05);
+        border-color: $light-border;
+        color: $light-text;
+      }
+
+      &::placeholder {
+        color: $dark-text-secondary;
+        &.light {
+          color: $light-text-secondary;
+        }
+      }
+    }
+
+    .poll-question-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+
+      &.light {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      }
+    }
+  }
+
+  .poll-options-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .poll-option-row {
+      @include flex-between;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+
+      .poll-option-input {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid $dark-border;
+        border-radius: 8px;
+        padding: 0.75rem;
+        color: $dark-text;
+        font-size: 1rem;
+        outline: none;
+
+        &.light {
+          background: rgba(0, 0, 0, 0.05);
+          border-color: $light-border;
+          color: $light-text;
+        }
+
+        &::placeholder {
+          color: $dark-text-secondary;
+          &.light {
+            color: $light-text-secondary;
+          }
+        }
+      }
+
+      .poll-option-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .poll-option-image {
+          cursor: pointer;
+          color: $accent-yellow;
+          font-size: 0.9rem;
+          padding: 0.5rem;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.1);
+          transition: background 0.2s;
+
+          &.light {
+            color: $accent-blue;
+            background: rgba(0, 0, 0, 0.05);
+          }
+
+          &:hover {
+            background: rgba(255, 235, 59, 0.2);
+            &.light {
+              background: rgba(25, 118, 210, 0.2);
+            }
+          }
+
+          input {
+            display: none;
+          }
+        }
+
+        .poll-option-image-preview {
+          width: 40px;
+          height: 40px;
+          border-radius: 8px;
+          object-fit: cover;
+          border: 1px solid $dark-border;
+
+          &.light {
+            border-color: $light-border;
+          }
+        }
+
+        .poll-option-remove {
+          background: none;
+          border: none;
+          color: $accent-red;
+          cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 50%;
+          transition: background 0.2s;
+
+          &:hover {
+            background: rgba(244, 67, 54, 0.2);
+          }
+
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+
+    .poll-add-option {
+      background: none;
+      border: 1px solid $accent-yellow;
+      color: $accent-yellow;
+      border-radius: 999px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+
+      &.light {
+        border-color: $accent-blue;
+        color: $accent-blue;
+      }
+
+      &:hover {
+        background: rgba(255, 235, 59, 0.2);
+        &.light {
+          background: rgba(25, 118, 210, 0.2);
+        }
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .poll-duration-section {
+    .poll-duration-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid $dark-border;
+      border-radius: 8px;
+      padding: 0.75rem;
+      color: $dark-text;
+      font-size: 1rem;
+      outline: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+
+      &.light {
+        background: rgba(0, 0, 0, 0.05);
+        border-color: $light-border;
+        color: $light-text;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      }
+    }
+  }
+
+  .poll-upload-progress {
+    color: $accent-yellow;
+    font-size: 0.9rem;
+    text-align: center;
+
+    &.light {
+      color: $accent-blue;
+    }
+  }
+
+  .poll-preview-section {
+    margin-top: 1rem;
+
+    h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .poll-preview {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      &.light {
+        background: rgba(0, 0, 0, 0.05);
+        border-color: $light-border;
+      }
+
+      .poll-preview-question {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
+
+      .poll-preview-option {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+
+        .poll-preview-option-image {
+          width: 24px;
+          height: 24px;
+          border-radius: 4px;
+          object-fit: cover;
+          border: 1px solid $dark-border;
+
+          &.light {
+            border-color: $light-border;
+          }
+        }
+
+        span {
+          font-size: 0.9rem;
+          color: $dark-text;
+
+          &.light {
+            color: $light-text;
+          }
+        }
+      }
+    }
+  }
+
+  .poll-dialog-footer {
+    @include flex-between;
+    padding: 1rem 0 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    &.light {
+      border-top: 1px solid $light-border;
+    }
+
+    .poll-cancel-button,
+    .poll-create-button {
+      padding: 0.5rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .poll-cancel-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: $dark-text;
+
+      &.light {
+        background: rgba(0, 0, 0, 0.05);
+        color: $light-text;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        &.light {
+          background: rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+
+    .poll-create-button {
+      background: linear-gradient(45deg, $accent-yellow, $accent-blue);
+      border: none;
+      color: $dark-text;
+
+      &:hover {
+        background: linear-gradient(45deg, darken($accent-yellow, 10%), darken($accent-blue, 10%));
+      }
+
+      &:disabled {
+        background: rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.5);
+        cursor: not-allowed;
+
+        &.light {
+          background: rgba(0, 0, 0, 0.2);
+          color: rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+  }
+}

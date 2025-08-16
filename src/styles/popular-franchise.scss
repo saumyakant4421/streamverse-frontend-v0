@@ -1,0 +1,916 @@
+// Variables
+$primary-bg: #0a0a0a;
+$text-color: #e0e0e0;
+$accent-color: #2563eb;
+$accent-color-alpha: rgba(37, 99, 235, 0.3);
+$white-alpha: rgba(255, 255, 255, 0.1);
+$card-bg: rgba(20, 20, 20, 0.9);
+$card-bg-hover: rgba(30, 30, 30, 1);
+$max-width: 1280px;
+$header-height: 83vh;
+$navbar-height: 60px;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid $accent-color-alpha;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100px;
+    height: 2px;
+    background: $accent-color;
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 150px;
+  }
+}
+
+@mixin button-style {
+  background: rgba(37, 99, 235, 0.3);
+  border: 1px solid $accent-color-alpha;
+  color: #ffffff;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  @include flex-center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  &:hover:not(:disabled) {
+    background: rgba(37, 99, 235, 0.5);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+// Base styles
+.fd-franchise-detail-container {
+  position: relative;
+  min-height: 100vh;
+  background: $primary-bg;
+  color: $text-color;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+  overflow-y: hidden; // Changed to auto to allow scrolling
+  scroll-behavior: smooth; // Enable smooth scrolling for the page
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(
+      circle,
+      rgba(37, 99, 235, 0.3) 0%,
+      rgba(147, 51, 234, 0.2) 50%,
+      transparent 100%
+    );
+    filter: blur(100px);
+    border-radius: 50%;
+    animation: float1 40s infinite ease-in-out;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(
+      circle,
+      rgba(236, 72, 153, 0.3) 0%,
+      rgba(59, 130, 246, 0.2) 50%,
+      transparent 100%
+    );
+    filter: blur(80px);
+    border-radius: 50%;
+    animation: float2 40s infinite ease-in-out;
+    z-index: 0;
+    pointer-events: none;
+  }
+}
+
+.fd-navbar {
+  position: fixed;
+  top: 0;
+  // left: 0;
+  right: 3.5rem;
+  width: 100%;
+  height: $navbar-height;
+  z-index: 100;
+}
+
+.fd-navbar{
+  .logo, .profile-icon{
+    opacity: 0;
+  }
+}
+
+  .fd-navbar .navbar.scrolled {
+    // background: rgba(11, 1, 1, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    // border-bottom: 1px solid rgba(46, 107, 255, 0.2);
+    opacity: 0;
+  }
+
+.fd-background-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  .fd-animated-orb {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(
+      circle,
+      rgba(74, 222, 128, 0.3) 0%,
+      rgba(34, 211, 238, 0.2) 50%,
+      transparent 100%
+    );
+    filter: blur(120px);
+    border-radius: 50%;
+    animation: float3 40s infinite ease-in-out;
+    opacity: 0.6;
+
+    &:nth-child(2) {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(
+        circle,
+        rgba(236, 72, 153, 0.3) 0%,
+        rgba(59, 130, 246, 0.2) 50%,
+        transparent 100%
+      );
+      animation: float2 40s infinite ease-in-out;
+      opacity: 0.5;
+      top: 20%;
+      left: 10%;
+    }
+
+    &:nth-child(3) {
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(
+        circle,
+        rgba(37, 99, 235, 0.3) 0%,
+        rgba(147, 51, 234, 0.2) 50%,
+        transparent 100%
+      );
+      animation: float1 40s infinite ease-in-out;
+      opacity: 0.4;
+      top: 50%;
+      left: 70%;
+    }
+  }
+}
+
+@keyframes float1 {
+  0% { transform: translate(0, 0); opacity: 0.8; }
+  25% { transform: translate(40vw, 10vh); opacity: 0.6; }
+  50% { transform: translate(70vw, 30vh); opacity: 0.8; }
+  75% { transform: translate(20vw, 50vh); opacity: 0.6; }
+  100% { transform: translate(0, 0); opacity: 0.8; }
+}
+
+@keyframes float2 {
+  0% { transform: translate(20vw, 40vh); opacity: 0.7; }
+  25% { transform: translate(60vw, 70vh); opacity: 0.5; }
+  50% { transform: translate(30vw, 90vh); opacity: 0.7; }
+  75% { transform: translate(10vw, 60vh); opacity: 0.5; }
+  100% { transform: translate(20vw, 40vh); opacity: 0.7; }
+}
+
+@keyframes float3 {
+  0% { transform: translate(10vw, 80vh); opacity: 0.6; }
+  25% { transform: translate(50vw, 50vh); opacity: 0.8; }
+  50% { transform: translate(80vw, 70vh); opacity: 0.6; }
+  75% { transform: translate(30vw, 90vh); opacity: 0.8; }
+  100% { transform: translate(10vw, 80vh); opacity: 0.6; }
+}
+
+.fd-franchise-header {
+  position: relative;
+  width: 100%;
+  height: $header-height;
+  @include flex-center;
+  overflow: hidden;
+
+  .fd-backdrop-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    .fd-backdrop-poster-image {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 4;
+      transition: opacity 0.5s ease;
+      filter: brightness(0.8);
+    }
+
+    .fd-backdrop-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.99));
+      z-index: 5;
+    }
+  }
+
+  .fd-header-content {
+    position: absolute;
+    z-index: 6;
+    text-align: center;
+    width: 100%;
+    padding: 0 2rem;
+
+    .fd-backdrop-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #dad5e1;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      margin: 15rem 0 1rem 0;
+      background: linear-gradient(45deg, #ffffff, #e0e0e0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .fd-franchise-stats {
+      @include flex-center;
+      gap: 2rem;
+      z-index: 7;
+
+      .fd-stat-item {
+        @include flex-center;
+        gap: 0.25rem;
+        font-size: 1.1rem;
+        color: #d1d5db;
+        background:  rgba(5, 11, 22, 0.801);
+        padding: 0.65rem 1.45rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(215, 213, 213, 0.641);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: rgba(23, 73, 181, 0.459);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+        }
+      }
+    }
+  }
+}
+
+.fd-content-wrapper {
+  position: relative;
+  z-index: 3;
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+  box-sizing: border-box;
+
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.fd-franchise-overview-section {
+  text-align: center;
+  margin-bottom: 4rem;
+
+  .fd-franchise-overview {
+    font-size: 1.1rem;
+    color: #b0b0b0;
+    max-width: 100rem;
+    margin: 0 auto;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+    animation: fadeIn 1s ease-in-out;
+  }
+}
+
+.fd-franchise-details {
+  margin-bottom: 4rem;
+
+  &.fd-timeline-section {
+    .fd-section-title {
+      @include section-title;
+    }
+
+    .fd-timeline-container {
+      position: relative;
+      max-width: $max-width;
+      width: 90%;
+      margin: 2rem auto;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 12px;
+      background: rgba(15, 15, 15, 0.5);
+      backdrop-filter: blur(5px);
+      padding: 1rem 0;
+
+      .fd-timeline-carousel-wrapper {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+
+      .fd-timeline-track {
+        display: flex;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); // Smoother easing for sliding
+        align-items: center;
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .fd-timeline-item {
+        position: relative;
+        height: 350px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 2rem;
+        text-decoration: none;
+        color: inherit;
+
+        .fd-timeline-marker {
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 16px;
+          height: 16px;
+          background: linear-gradient(45deg, $accent-color, #4f8fff);
+          border-radius: 50%;
+          border: 3px solid $primary-bg;
+          z-index: 2;
+          box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+          transition: transform 0.3s ease;
+        }
+
+        .fd-timeline-content {
+          position: relative;
+          width: 100%;
+          height: 100%;
+
+          .fd-timeline-node {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: $card-bg;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid $white-alpha;
+            max-width: 220px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+
+            h3 {
+              margin: 0;
+              font-size: 1.1rem;
+              color: #ffffff;
+              text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              letter-spacing: 0.02em;
+            }
+
+            .fd-timeline-date {
+              color: $accent-color;
+              font-weight: 500;
+              font-size: 0.9rem;
+              text-shadow: 0 0 4px rgba(37, 99, 235, 0.4);
+            }
+          }
+
+          .fd-timeline-tile {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: $card-bg;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid $white-alpha;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 6;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+            .fd-timeline-poster {
+              width: 150px;
+              height: 225px;
+              object-fit: cover;
+              border-radius: 8px;
+              border: 2px solid $white-alpha;
+              transition: transform 0.3s ease;
+            }
+          }
+        }
+
+        // Hover state
+        &:hover .fd-timeline-content {
+          .fd-timeline-tile {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) scale(1.05);
+          }
+
+          .fd-timeline-marker {
+            transform: translateX(-50%) scale(1.2);
+          }
+
+          .fd-timeline-node {
+            background: $card-bg-hover;
+            border-color: $accent-color-alpha;
+          }
+        }
+
+        // Active state (Fixed)
+        &.fd-timeline-item-active .fd-timeline-content {
+          .fd-timeline-tile {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) scale(1.05);
+          }
+
+          .fd-timeline-marker {
+            transform: translateX(-50%) scale(1.2);
+          }
+
+          .fd-timeline-node {
+            background: $card-bg-hover;
+            border-color: $accent-color-alpha;
+          }
+        }
+
+        .fd-timeline-connector {
+          position: absolute;
+          bottom: 8px;
+          right: -2rem;
+          width: 4rem;
+          height: 2px;
+          background: linear-gradient(to right, rgba(37, 99, 235, 0.8), rgba(37, 99, 235, 0.4));
+          z-index: 1;
+        }
+      }
+
+      .fd-timeline-nav-btn-left {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        @include button-style;
+        z-index: 10;
+
+        &:hover:not(:disabled) {
+          background: rgba(37, 99, 235, 0.5);
+          transform: translateY(-50%) scale(1.1);
+        }
+      }
+
+      .fd-timeline-nav-btn-right {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        @include button-style;
+        z-index: 10;
+
+        &:hover:not(:disabled) {
+          background: rgba(37, 99, 235, 0.5);
+          transform: translateY(-50%) scale(1.1);
+        }
+      }
+    }
+  }
+
+  &.fd-cast-section,
+  &.fd-directors-section {
+    .fd-carousel-container {
+      margin-bottom: 3rem;
+      width: 100%;
+
+      .fd-carousel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+
+        .fd-section-title {
+          @include section-title;
+        }
+
+        .fd-carousel-controls {
+          display: flex;
+          gap: 0.5rem;
+
+          .fd-carousel-btn {
+            @include button-style;
+          }
+        }
+      }
+
+      .fd-carousel-wrapper {
+        overflow: hidden;
+        border-radius: 12px;
+        width: 100%;
+        background: rgba(15, 15, 15, 0.5);
+        padding: 1rem 0;
+
+        .fd-carousel-track {
+          display: flex;
+          transition: transform 0.5s ease;
+          width: 100%;
+
+          .fd-carousel-item {
+            flex: 0 0 15%;
+            padding: 0 0.5rem;
+            box-sizing: border-box;
+
+            .fd-person-card {
+              background: $card-bg;
+              border-radius: 12px;
+              padding: 1rem;
+              text-align: center;
+              transition: all 0.3s ease;
+              border: 1px solid $white-alpha;
+
+              &:hover {
+                transform: translateY(-5px);
+                background: $card-bg-hover;
+                box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+              }
+
+              .fd-person-image {
+                width: 100%;
+                max-width: 85px;
+                height: 120px;
+                border-radius: 8px;
+                object-fit: cover;
+                margin-bottom: 0.75rem;
+                border: 2px solid $white-alpha;
+                transition: transform 0.3s ease;
+
+                &:hover {
+                  transform: scale(1.05);
+                }
+              }
+
+              .fd-person-name {
+                display: block;
+                font-size: 0.9rem;
+                color: $text-color;
+                font-weight: 500;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.fd-movies-section {
+    .fd-section-title {
+      @include section-title;
+    }
+
+    .fd-movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+
+      .fd-movie-card {
+        background: $card-bg;
+        border-radius: 12px;
+        border: 1px solid $white-alpha;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: var(--bg-image);
+          background-size: cover;
+          background-position: center;
+          border-radius: 12px;
+          filter: blur(5px);
+          z-index: 1;
+          transition: filter 0.5s ease;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          background: $card-bg-hover;
+          border-color: $accent-color-alpha;
+
+          &::before {
+            filter: blur(0.25px);
+          }
+
+          .fd-movie-overlay {
+            background: rgba(0, 0, 0, 0.5);
+          }
+        }
+
+        .fd-movie-backdrop {
+          width: 100%;
+          height: 100%;
+          border-radius: 12px;
+          position: relative;
+          @include flex-center;
+          flex-direction: column;
+          background: none;
+          z-index: 2;
+        }
+
+        .fd-movie-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.6);
+          border-radius: 12px;
+          transition: background 0.5s ease;
+          z-index: 3;
+        }
+
+        .fd-movie-info {
+          position: relative;
+          text-align: center;
+          padding: 1rem;
+          z-index: 4;
+
+          .fd-movie-title {
+            margin: 0 0 0.5rem 0;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 500;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            line-height: 1.3;
+          }
+
+          .fd-movie-year {
+            color: rgba(0, 255, 0, 0.9);
+            font-weight: 600;
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+.fd-loading-spinner {
+  @include flex-center;
+  flex-direction: column;
+  height: 100vh;
+  gap: 1rem;
+
+  .fd-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid $accent-color-alpha;
+    border-top: 3px solid $accent-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  .fd-spinner + p {
+    font-size: 1.2rem;
+    color: $accent-color;
+  }
+}
+
+.fd-no-results {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ef4444;
+  padding: 2rem;
+}
+
+.fd-back-link {
+  display: inline-block;
+  text-align: center;
+  margin: 1rem auto;
+  color: $accent-color;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  border: 1px solid $accent-color-alpha;
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    color: #ffffff;
+    background: rgba(37, 99, 235, 0.3);
+    border-color: $accent-color;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .fd-navbar {
+    height: 50px;
+    padding: 0 1rem;
+  }
+
+  .fd-franchise-header {
+    height: 50vh;
+
+    .fd-header-content {
+      .fd-backdrop-title {
+        font-size: 2.5rem;
+        margin: 10rem 0 1rem 0;
+      }
+
+      .fd-franchise-stats {
+        flex-direction: column;
+        gap: 1rem;
+
+        .fd-stat-item {
+          font-size: 1rem;
+          padding: 0.5rem 1rem;
+        }
+      }
+    }
+  }
+
+  .fd-franchise-details {
+    &.fd-timeline-section {
+      .fd-timeline-container {
+        height: 300px;
+        width: 100%;
+        padding: 0.5rem 0;
+
+        .fd-timeline-item {
+          height: 250px;
+          padding: 0 1rem;
+
+          .fd-timeline-node {
+            max-width: 150px;
+            bottom: 20px;
+            padding: 0.5rem;
+
+            h3 {
+              font-size: 0.9rem;
+            }
+
+            .fd-timeline-date {
+              font-size: 0.8rem;
+            }
+          }
+
+          .fd-timeline-tile {
+            top: 0;
+            padding: 0.5rem;
+
+            .fd-timeline-poster {
+              width: 100px;
+              height: 150px;
+            }
+          }
+
+          .fd-timeline-connector {
+            width: 2rem;
+            right: -1rem;
+          }
+        }
+
+        .fd-timeline-nav-btn-left {
+          left: 5px;
+          width: 40px;
+          height: 40px;
+        }
+
+        .fd-timeline-nav-btn-right {
+          right: 5px;
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+
+    &.fd-cast-section,
+    &.fd-directors-section {
+      .fd-carousel-container {
+        .fd-carousel-wrapper {
+          .fd-carousel-track {
+            .fd-carousel-item {
+              flex: 0 0 30%;
+            }
+          }
+        }
+      }
+    }
+
+    &.fd-movies-section {
+      .fd-movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+
+        .fd-movie-card {
+          height: 180px;
+
+          &::before {
+            filter: blur(8px);
+          }
+
+          &:hover::before {
+            filter: blur(4px);
+          }
+
+          .fd-movie-info {
+            .fd-movie-title {
+              font-size: 0.9rem;
+            }
+
+            .fd-movie-year {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

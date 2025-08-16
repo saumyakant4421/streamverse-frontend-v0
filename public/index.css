@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0a0a0a; /* Deep black for the entire page */
+  min-height: 100vh; /* Ensure body covers the full viewport height */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
+  background-color: #0a0a0a; /* Match body's background for consistency */
+  min-height: 100vh; /* Ensure root div spans the full viewport height */
+  width: 100%; /* Ensure root div spans the full width */
+  box-sizing: border-box; /* Prevent padding/margins from causing overflow */
+}
