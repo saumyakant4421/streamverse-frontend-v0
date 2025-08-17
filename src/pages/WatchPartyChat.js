@@ -17,7 +17,7 @@ import {
 import { db as firestoreDb } from "../firebaseConfig";
 import { watchPartyService } from "../lib/services"; // Import watchPartyService
 
-const WatchPartyPlanner = () => {
+const WatchPartyChat = () => {
   const { watchPartyId } = useParams();
   const { user } = useAuth();
   const [watchParty, setWatchParty] = useState(null);
@@ -32,6 +32,14 @@ const WatchPartyPlanner = () => {
   const [userPublicKeys, setUserPublicKeys] = useState([]);
   const messagesEndRef = useRef(null);
   const [userMap, setUserMap] = useState({});
+
+  // Validate watchPartyId
+  useEffect(() => {
+    if (!watchPartyId) {
+      setError("Invalid watch party ID");
+      return;
+    }
+  }, [watchPartyId]);
 
     useEffect(() => {
       // Initialize libsodium
@@ -388,4 +396,4 @@ const WatchPartyPlanner = () => {
   );
 };
 
-export default WatchPartyPlanner;
+export default WatchPartyChat;
