@@ -12,15 +12,25 @@ const NotificationPanel = ({ onClose }) => {
 
   useEffect(() => {
     if (!user) return;
-    const notificationsQuery = query(
-      collection(firestoreDb, 'notifications', user.uid, 'userNotifications'),
-      orderBy('createdAt', 'desc')
-    );
-    const unsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
-      const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setNotifications(docs);
-    });
-    return () => unsubscribe();
+    
+    try {
+      const notificationsQuery = query(
+        collection(firestoreDb, 'notifications', user.uid, 'userNotifications'),
+        orderBy('createdAt', 'desc')
+      );
+      const unsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
+        const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setNotifications(docs);
+      }, (error) => {
+        console.error("Firestore notifications listener error:", error);
+        if (error.code === 'permission-denied') {
+          console.log("Firestore access denied - check security rules");
+        }
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.error("Error setting up notifications listener:", error);
+    }
   }, [user]);
 
   // Helper to extract all userIds from a message
@@ -43,16 +53,24 @@ const NotificationPanel = ({ onClose }) => {
       )
     );
     if (userIds.length === 0) return;
+    
     const fetchUsernames = async () => {
-      const usersRef = collection(firestoreDb, 'users');
-      const userDocs = await Promise.all(userIds.map(uid => getDoc(doc(usersRef, uid))));
-      const userMapObj = {};
-      userDocs.forEach(docSnap => {
-        if (docSnap.exists()) {
-          userMapObj[docSnap.id] = docSnap.data().name || docSnap.data().username || docSnap.id;
+      try {
+        const usersRef = collection(firestoreDb, 'users');
+        const userDocs = await Promise.all(userIds.map(uid => getDoc(doc(usersRef, uid))));
+        const userMapObj = {};
+        userDocs.forEach(docSnap => {
+          if (docSnap.exists()) {
+            userMapObj[docSnap.id] = docSnap.data().name || docSnap.data().username || docSnap.id;
+          }
+        });
+        setUserMap(userMapObj);
+      } catch (error) {
+        console.error("Error fetching usernames:", error);
+        if (error.code === 'permission-denied') {
+          console.log("Firestore access denied - check security rules");
         }
-      });
-      setUserMap(userMapObj);
+      }
     };
     fetchUsernames();
   }, [notifications]);

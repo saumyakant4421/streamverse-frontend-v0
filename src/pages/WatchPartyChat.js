@@ -148,7 +148,7 @@ const WatchPartyPlanner = () => {
   };
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !watchPartyId) return;
 
     const db = firestoreDb;
     const messagesQuery = query(
@@ -157,24 +157,34 @@ const WatchPartyPlanner = () => {
     );
 
     const unsubscribe = onSnapshot(messagesQuery, async (snapshot) => {
-      let docs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      docs = docs.sort((a, b) => {
-        const getTime = (msg) => {
-          const t =
-            msg && msg.messages && msg.messages[0] && msg.messages[0].timestamp;
-          if (!t) return 0;
-          if (typeof t.toDate === "function") return t.toDate().getTime();
-          return new Date(t).getTime();
-        };
-        return getTime(a) - getTime(b);
-      });
-      const decryptedMessages = await Promise.all(
-        docs.map(async (msg) => ({
-          ...msg,
-          message: await decryptMessage(msg),
-        }))
-      );
-      setMessages(decryptedMessages);
+      try {
+        let docs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        docs = docs.sort((a, b) => {
+          const getTime = (msg) => {
+            const t =
+              msg && msg.messages && msg.messages[0] && msg.messages[0].timestamp;
+            if (!t) return 0;
+            if (typeof t.toDate === "function") return t.toDate().getTime();
+            return new Date(t).getTime();
+          };
+          return getTime(a) - getTime(b);
+        });
+        const decryptedMessages = await Promise.all(
+          docs.map(async (msg) => ({
+            ...msg,
+            message: await decryptMessage(msg),
+          }))
+        );
+        setMessages(decryptedMessages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+        // Handle permission denied or other Firestore errors gracefully
+        if (error.code === 'permission-denied') {
+          console.log("Firestore access denied - check security rules");
+        }
+      }
+    }, (error) => {
+      console.error("Firestore listener error:", error);
     });
 
     return () => unsubscribe();
@@ -195,18 +205,25 @@ const WatchPartyPlanner = () => {
     if (userIds.length === 0) return;
 
     const fetchUsernames = async () => {
-      const usersRef = collection(firestoreDb, "users");
-      const userDocs = await Promise.all(
-        userIds.map((uid) => getDoc(doc(usersRef, uid)))
-      );
-      const userMapObj = {};
-      userDocs.forEach((docSnap) => {
-        if (docSnap.exists()) {
-          userMapObj[docSnap.id] =
-            docSnap.data().name || docSnap.data().username || docSnap.id;
+      try {
+        const usersRef = collection(firestoreDb, "users");
+        const userDocs = await Promise.all(
+          userIds.map((uid) => getDoc(doc(usersRef, uid)))
+        );
+        const userMapObj = {};
+        userDocs.forEach((docSnap) => {
+          if (docSnap.exists()) {
+            userMapObj[docSnap.id] =
+              docSnap.data().name || docSnap.data().username || docSnap.id;
+          }
+        });
+        setUserMap(userMapObj);
+      } catch (error) {
+        console.error("Error fetching usernames:", error);
+        if (error.code === 'permission-denied') {
+          console.log("Firestore access denied - check security rules");
         }
-      });
-      setUserMap(userMapObj);
+      }
     };
 
     fetchUsernames();
