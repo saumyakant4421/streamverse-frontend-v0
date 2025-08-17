@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Navbar from './Navbar';
 import MovieMarathonPlanner from '../components/MovieMarathonPlanner';
-import WatchPartyPlanner from '../components/watchPartyPlanner';
+import WatchPartyPlanner from './WatchPartyChat';
 import { FaChevronRight, FaChevronDown } from 'react-icons/fa';
 import '../styles/tools.scss';
 import '../styles/watchparty.scss';
