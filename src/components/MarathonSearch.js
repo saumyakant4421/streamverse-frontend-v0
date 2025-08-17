@@ -1,39 +1,19 @@
+import React, { useState, useEffect } from "react";
+import { FaSearch } from "react-icons/fa";
+import { marathonService } from "../lib/services";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-hot-toast";
+import "../styles/searchbar.scss";
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { FaSearch } from 'react-icons/fa';
-import { toast } from 'react-hot-toast';
-import '../styles/searchbar.scss';
-
-const MarathonSearchBar = ({
-  apiBaseUrl = 'http://localhost:4004/api/tools/marathon',
-  placeholder = 'Search movies for your marathon...',
-  onAddToBucket,
-  bucket = [],
-  user,
-}) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const MarathonSearch = ({ onAddToBucket, bucket = [] }) => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
-
-  const marathonService = axios.create({
-    baseURL: apiBaseUrl,
-  });
-
-  marathonService.interceptors.request.use(
-    async (config) => {
-      if (user && user.getIdToken) {
-        const token = await user.getIdToken(true);
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+  const { user } = useAuth();
 
   useEffect(() => {
-    if (!searchQuery.trim()) {
+    if (searchQuery.trim().length < 2) {
       setSearchResults([]);
       setShowSearchResults(false);
       return;
@@ -41,23 +21,23 @@ const MarathonSearchBar = ({
     setIsSearchLoading(true);
     setShowSearchResults(true);
 
-    const source = axios.CancelToken.source();
+    const abortController = new AbortController();
 
     const searchMovies = async () => {
-      console.log('Searching with query:', searchQuery);
+      console.log("Searching with query:", searchQuery);
       try {
-        const response = await marathonService.get('/search', {
+        const response = await marathonService.get("/search", {
           params: { query: searchQuery },
-          cancelToken: source.token,
+          signal: abortController.signal,
         });
-        console.log('Search response:', response.data);
+        console.log("Search response:", response.data);
         setSearchResults(response.data || []);
       } catch (error) {
-        if (axios.isCancel(error)) {
-          console.log('Previous search request canceled');
+        if (error.name === 'AbortError') {
+          console.log("Previous search request canceled");
         } else {
-          console.error('Error searching movies:', error);
-          toast.error(error.response?.data?.error || 'Failed to search movies');
+          console.error("Error searching movies:", error);
+          toast.error(error.response?.data?.error || "Failed to search movies");
           setSearchResults([]);
         }
       } finally {
@@ -68,7 +48,7 @@ const MarathonSearchBar = ({
     const timeoutId = setTimeout(searchMovies, 500);
     return () => {
       clearTimeout(timeoutId);
-      source.cancel();
+      abortController.abort();
     };
   }, [searchQuery]);
 
@@ -79,13 +59,13 @@ const MarathonSearchBar = ({
   };
 
   const handleSearchFocus = () => {
-    if (searchQuery.trim() !== '') {
+    if (searchQuery.trim() !== "") {
       setShowSearchResults(true);
     }
   };
 
   const handleCloseSearch = () => {
-    setSearchQuery('');
+    setSearchQuery("");
     setSearchResults([]);
     setShowSearchResults(false);
   };
@@ -108,10 +88,14 @@ const MarathonSearchBar = ({
         </div>
         <div className="search-result-details">
           <h4>{movie.title}</h4>
-          <p>{movie.release_date ? new Date(movie.release_date).getFullYear() : 'Unknown'}</p>
+          <p>
+            {movie.release_date
+              ? new Date(movie.release_date).getFullYear()
+              : "Unknown"}
+          </p>
           <div className="search-result-actions">
             <button
-              className="search-watch-btn" // Changed from search-add-btn to search-watch-btn
+              className="search-watch-btn"
               onClick={(e) => {
                 e.stopPropagation();
                 onAddToBucket(movie);
@@ -119,15 +103,15 @@ const MarathonSearchBar = ({
               disabled={isInBucket || isBucketFull || !user}
               title={
                 !user
-                  ? 'Please log in to add movies'
+                  ? "Please log in to add movies"
                   : isInBucket
-                  ? 'Movie already in bucket'
+                  ? "Movie already in bucket"
                   : isBucketFull
-                  ? 'Bucket limit reached (30 movies)'
-                  : ''
+                  ? "Bucket limit reached (30 movies)"
+                  : ""
               }
             >
-              {isInBucket ? 'Added' : 'Add to Bucket'}
+              {isInBucket ? "Added" : "Add to Bucket"}
             </button>
           </div>
         </div>
@@ -139,7 +123,7 @@ const MarathonSearchBar = ({
     <div className="search-container">
       <input
         type="text"
-        placeholder={placeholder}
+        placeholder="Search movies to add to marathon..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         onFocus={handleSearchFocus}
@@ -148,25 +132,25 @@ const MarathonSearchBar = ({
       />
       <FaSearch className="search-icon" />
       {searchQuery && (
-        <button className="clear-search-btn" onClick={handleCloseSearch}>
+        <button className="clear-search" onClick={handleCloseSearch}>
           ×
         </button>
       )}
-      {isSearchLoading && <div className="loading-spinner">Loading...</div>}
-      {showSearchResults && searchResults.length > 0 && (
+      {showSearchResults && (
         <div className="search-results">
-          {searchResults.map((movie) => (
-            <SearchResultCard key={movie.id} movie={movie} />
-          ))}
-        </div>
-      )}
-      {showSearchResults && searchQuery && !isSearchLoading && searchResults.length === 0 && (
-        <div className="search-results">
-          <div className="no-results">No movies found matching "{searchQuery}"</div>
+          {isSearchLoading ? (
+            <div className="search-loading">Searching...</div>
+          ) : searchResults.length > 0 ? (
+            searchResults.slice(0, 5).map((movie) => (
+              <SearchResultCard key={movie.id} movie={movie} />
+            ))
+          ) : searchQuery.trim().length >= 2 ? (
+            <div className="no-results">No movies found</div>
+          ) : null}
         </div>
       )}
     </div>
   );
 };
 
-export default MarathonSearchBar;
+export default MarathonSearch;

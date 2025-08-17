@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'react-hot-toast';
-import { FaTrash } from 'react-icons/fa';
-import MarathonSearchBar from './MarathonSearch';
-import '../styles/marathon-planner.scss';
-
-const API_BASE_URL = 'http://localhost:4004/api/tools/marathon';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-hot-toast";
+import { FaTrash } from "react-icons/fa";
+import MarathonSearch from "./MarathonSearch";
+import "../styles/marathon-planner.scss";
+import { marathonService } from "../lib/services"; // Import marathonService
 
 const MovieMarathonPlanner = () => {
   const { user } = useAuth();
@@ -14,21 +12,6 @@ const MovieMarathonPlanner = () => {
   const [totalRuntime, setTotalRuntime] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const movieService = axios.create({
-    baseURL: API_BASE_URL,
-  });
-
-  movieService.interceptors.request.use(
-    async (config) => {
-      if (user && typeof user.getIdToken === 'function') {
-        const token = await user.getIdToken(true);
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
 
   useEffect(() => {
     if (user) {
@@ -45,12 +28,12 @@ const MovieMarathonPlanner = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await movieService.get('/bucket');
+      const response = await marathonService.get("/bucket");
       setBucket(response.data.movies || []);
       await calculateRuntime();
     } catch (err) {
-      setError('Failed to load bucket');
-      toast.error('Failed to load bucket');
+      setError("Failed to load bucket");
+      toast.error("Failed to load bucket");
     } finally {
       setLoading(false);
     }
@@ -58,18 +41,20 @@ const MovieMarathonPlanner = () => {
 
   const addToBucket = async (movie) => {
     if (!user) {
-      toast.error('Please log in to add movies');
+      toast.error("Please log in to add movies");
       return;
     }
     try {
       setLoading(true);
       setError(null);
-      const response = await movieService.post('/bucket/add', { movieId: movie.id });
+      const response = await marathonService.post("/bucket/add", {
+        movieId: movie.id,
+      });
       setBucket(response.data.movies);
-      toast.success('Movie added to bucket');
+      toast.success("Movie added to bucket");
       await calculateRuntime();
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Failed to add movie');
+      toast.error(err.response?.data?.error || "Failed to add movie");
     } finally {
       setLoading(false);
     }
@@ -77,18 +62,20 @@ const MovieMarathonPlanner = () => {
 
   const removeFromBucket = async (movieId) => {
     if (!user) {
-      toast.error('Please log in to remove movies');
+      toast.error("Please log in to remove movies");
       return;
     }
     try {
       setLoading(true);
       setError(null);
-      const response = await movieService.delete(`/bucket/remove/${movieId}`);
+      const response = await marathonService.delete(
+        `/bucket/remove/${movieId}`
+      );
       setBucket(response.data.movies);
-      toast.success('Movie removed from bucket');
+      toast.success("Movie removed from bucket");
       await calculateRuntime();
     } catch (err) {
-      toast.error('Failed to remove movie');
+      toast.error("Failed to remove movie");
     } finally {
       setLoading(false);
     }
@@ -100,18 +87,21 @@ const MovieMarathonPlanner = () => {
       return;
     }
     try {
-      const response = await movieService.get('/bucket/runtime');
+      const response = await marathonService.get("/bucket/runtime");
       setTotalRuntime(response.data);
     } catch (err) {
       setTotalRuntime(null);
-      toast.error('Failed to calculate runtime');
+      toast.error("Failed to calculate runtime");
     }
   };
 
   if (!user) {
     return (
       <div className="tools-marathon-planner">
-        <MarathonSearchBar onAddToBucket={addToBucket} bucket={bucket} user={user} />
+        <MarathonSearch
+          onAddToBucket={addToBucket}
+          bucket={bucket}
+        />
         <div className="tools-bucket-section">
           <h2>Your Marathon Bucket (0/30)</h2>
           <p>Please log in to create a movie marathon.</p>
@@ -122,7 +112,10 @@ const MovieMarathonPlanner = () => {
 
   return (
     <div className="tools-marathon-planner">
-      <MarathonSearchBar onAddToBucket={addToBucket} bucket={bucket} user={user} />
+      <MarathonSearch
+        onAddToBucket={addToBucket}
+        bucket={bucket}
+      />
       {error && <p className="tools-error">{error}</p>}
       {loading && <div className="tools-spinner">Loading...</div>}
 

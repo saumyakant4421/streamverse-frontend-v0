@@ -1,20 +1,35 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { FaHeart, FaTheaterMasks, FaGhost } from "react-icons/fa";
-import { MdMovie, MdOutlineBeachAccess, MdOutlineLocalMovies } from "react-icons/md";
-import { GiPunchingBag, GiCrimeSceneTape, GiDramaMasks, GiMagicPortal } from "react-icons/gi";
+import {
+  MdMovie,
+  MdOutlineBeachAccess,
+  MdOutlineLocalMovies,
+} from "react-icons/md";
+import {
+  GiPunchingBag,
+  GiCrimeSceneTape,
+  GiDramaMasks,
+  GiMagicPortal,
+} from "react-icons/gi";
 import Navbar from "./Navbar.js";
 import SearchBar from "../components/SearchBar";
 import "../styles/homepage.scss";
-
-const API_BASE_URL = "http://localhost:4001/api/movies";
+// Import services instead of api
+import { movieService, userService } from "../lib/services";
 
 const genres = [
-  "Action", "Adventure", "Animation", "Comedy",
-  "Crime", "Documentary", "Drama", "Fantasy",
-  "Horror", "SciFi"
+  "Action",
+  "Adventure",
+  "Animation",
+  "Comedy",
+  "Crime",
+  "Documentary",
+  "Drama",
+  "Fantasy",
+  "Horror",
+  "SciFi",
 ];
 
 const genreIcons = {
@@ -27,7 +42,7 @@ const genreIcons = {
   Drama: <GiDramaMasks />,
   Fantasy: <GiMagicPortal />,
   Horror: <FaGhost />,
-  SciFi: <MdMovie />
+  SciFi: <MdMovie />,
 };
 
 const Homepage = () => {
@@ -52,10 +67,14 @@ const Homepage = () => {
 
   const fetchTrendingMovies = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/trending`);
-      setTrendingMovies(response.data);
+      const response = await movieService.get("/trending"); // Updated to movieService
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data?.results || [];
+      setTrendingMovies(data);
     } catch (error) {
       console.error("Error fetching trending movies", error);
+      setTrendingMovies([]);
     }
   };
 
@@ -64,10 +83,14 @@ const Homepage = () => {
     let genreData = {};
     for (let genre of genres) {
       try {
-        const response = await axios.get(`${API_BASE_URL}/genres/${genre}`);
-        genreData[genre] = response.data;
+        const response = await movieService.get(`/genres/${genre}`); // Updated to movieService
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.results || [];
+        genreData[genre] = data;
       } catch (error) {
         console.error(`Error fetching ${genre} movies`, error);
+        genreData[genre] = [];
       }
     }
     setGenreMovies(genreData);
@@ -76,10 +99,14 @@ const Homepage = () => {
 
   const fetchWatchlist = async () => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/user/watchlist?uid=${user.uid}`);
-      setWatchlist(response.data);
+      const response = await userService.get(`/watchlist?uid=${user.uid}`); // Updated to userService
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data?.watchlist || [];
+      setWatchlist(data);
     } catch (error) {
       console.error("Error fetching watchlist", error);
+      setWatchlist([]);
     }
   };
 
@@ -98,7 +125,7 @@ const Homepage = () => {
         uid: user.uid,
       };
 
-      await axios.post(`http://localhost:5001/api/user/watchlist/add`, watchlistItem);
+      await userService.post("/watchlist/add", watchlistItem); // Updated to userService
       setWatchlist([...watchlist, watchlistItem]);
     } catch (error) {
       console.error("Error adding movie to watchlist", error);
@@ -187,7 +214,9 @@ const Homepage = () => {
               {genres.map((genre) => (
                 <button
                   key={genre}
-                  className={`genre-tile ${selectedGenre === genre ? "active" : ""}`}
+                  className={`genre-tile ${
+                    selectedGenre === genre ? "active" : ""
+                  }`}
                   onClick={() => handleGenreSelect(genre)}
                 >
                   <span className="genre-icon">{genreIcons[genre]}</span>
@@ -211,7 +240,9 @@ const Homepage = () => {
                 ))}
               </div>
             ) : (
-              <p className="empty-watchlist">No movies available for this genre</p>
+              <p className="empty-watchlist">
+                No movies available for this genre
+              </p>
             )}
           </div>
         </div>

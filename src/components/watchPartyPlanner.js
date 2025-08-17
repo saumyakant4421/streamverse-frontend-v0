@@ -1,18 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
-import toast from 'react-hot-toast';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import { FaUsers, FaGlobe, FaLock, FaClock, FaSync, FaArrowRight, FaComment, FaPlay } from 'react-icons/fa';
-import WatchPartySearchBar from './watchpartySearchBar';
-import '../styles/watchparty.scss';
-import '../styles/calendar.scss';
-
-const API_BASE_URL = 'http://localhost:4004/api/tools/watchparty';
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import {
+  FaUsers,
+  FaGlobe,
+  FaLock,
+  FaClock,
+  FaSync,
+  FaArrowRight,
+  FaComment,
+  FaPlay,
+} from "react-icons/fa";
+import WatchPartySearchBar from "./WatchPartySearchBar";
+import { watchPartyService } from "../lib/services"; // Import watchPartyService
+import "../styles/watchparty.scss";
+import "../styles/calendar.scss";
 
 const WatchPartyPlanner = () => {
   const { user } = useAuth();
@@ -21,11 +28,13 @@ const WatchPartyPlanner = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentMonth, setCurrentMonth] = useState(new Date().toLocaleString('default', { month: 'long', year: 'numeric' }));
+  const [currentMonth, setCurrentMonth] = useState(
+    new Date().toLocaleString("default", { month: "long", year: "numeric" })
+  );
   const [form, setForm] = useState({
-    title: '',
-    description: '',
-    dateTime: '',
+    title: "",
+    description: "",
+    dateTime: "",
     movieIds: [],
     selectedMovies: [],
     isPublic: false,
@@ -33,34 +42,19 @@ const WatchPartyPlanner = () => {
   });
   const calendarRef = useRef(null);
 
-  const watchPartyService = axios.create({
-    baseURL: API_BASE_URL,
-  });
-
-  watchPartyService.interceptors.request.use(
-    async (config) => {
-      if (user && typeof user.getIdToken === 'function') {
-        const token = await user.getIdToken(true);
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    },
-    (err) => Promise.reject(err)
-  );
-
   const fetchWatchParties = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await watchPartyService.get('/user');
+      const response = await watchPartyService.get("/user");
       if (!Array.isArray(response.data)) {
-        throw new Error('Invalid watch parties data');
+        throw new Error("Invalid watch parties data");
       }
       setWatchParties(response.data);
     } catch (err) {
-      console.error('Error fetching watch parties:', err.message);
-      setError('Failed to load watch parties');
-      toast.error('Failed to fetch watch parties');
+      console.error("Error fetching watch parties:", err.message);
+      setError("Failed to load watch parties");
+      toast.error("Failed to fetch watch parties");
     } finally {
       setLoading(false);
     }
@@ -68,51 +62,51 @@ const WatchPartyPlanner = () => {
 
   const fetchPublicWatchParties = async () => {
     try {
-      const response = await watchPartyService.get('/public');
+      const response = await watchPartyService.get("/public");
       if (!Array.isArray(response.data)) {
-        throw new Error('Invalid public watch parties data');
+        throw new Error("Invalid public watch parties data");
       }
       setPublicWatchParties(response.data);
     } catch (err) {
-      console.error('Error fetching public watch parties:', err.message);
-      toast.error('Failed to fetch public watch parties');
+      console.error("Error fetching public watch parties:", err.message);
+      toast.error("Failed to fetch public watch parties");
     }
   };
 
   const fetchNotifications = async () => {
     try {
-      const response = await watchPartyService.get('/notifications');
+      const response = await watchPartyService.get("/notifications");
       if (!Array.isArray(response.data)) {
-        throw new Error('Invalid notifications data');
+        throw new Error("Invalid notifications data");
       }
       setNotifications(response.data);
     } catch (err) {
-      console.error('Error fetching notifications:', err.message);
-      toast.error('Failed to fetch notifications');
+      console.error("Error fetching notifications:", err.message);
+      toast.error("Failed to fetch notifications");
     }
   };
 
   const createWatchParty = async (e) => {
     e.preventDefault();
     if (!user) {
-      toast.error('Please log in to create a watch party');
+      toast.error("Please log in to create a watch party");
       return;
     }
     const { title, dateTime, movieIds } = form;
     if (!title.trim()) {
-      toast.error('Title is required');
+      toast.error("Title is required");
       return;
     }
     if (!dateTime) {
-      toast.error('Date and time are required');
+      toast.error("Date and time are required");
       return;
     }
     if (movieIds.length === 0) {
-      toast.error('Please select at least one movie');
+      toast.error("Please select at least one movie");
       return;
     }
     if (movieIds.some((id) => !id || isNaN(parseInt(id)))) {
-      toast.error('Invalid movie selections');
+      toast.error("Invalid movie selections");
       return;
     }
     const payload = {
@@ -126,26 +120,28 @@ const WatchPartyPlanner = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('Create watch party payload:', payload);
-      const response = await watchPartyService.post('/create', payload);
-      if (!response.data.id || typeof response.data.id !== 'string') {
-        throw new Error('Invalid watch party ID');
+      console.log("Create watch party payload:", payload);
+      const response = await watchPartyService.post("/create", payload);
+      if (!response.data.id || typeof response.data.id !== "string") {
+        throw new Error("Invalid watch party ID");
       }
       setWatchParties([...watchParties, response.data]);
       setForm({
-        title: '',
-        description: '',
-        dateTime: '',
+        title: "",
+        description: "",
+        dateTime: "",
         movieIds: [],
         selectedMovies: [],
         isPublic: false,
         invitedUserIds: [],
       });
-      toast.success('Watch party created successfully');
+      toast.success("Watch party created successfully");
     } catch (err) {
-      console.error('Error creating watch party:', err);
+      console.error("Error creating watch party:", err);
       const errorMessage =
-        err.response?.data?.error || err.response?.data?.message || 'Failed to create watch party. Please try again.';
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Failed to create watch party. Please try again.";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -155,23 +151,31 @@ const WatchPartyPlanner = () => {
 
   const joinWatchParty = async (watchPartyId) => {
     if (!user) {
-      toast.error('Please log in to join a watch party');
+      toast.error("Please log in to join a watch party");
       return;
     }
-    if (!watchPartyId || typeof watchPartyId !== 'string' || watchPartyId.length < 6) {
-      toast.error('Invalid watch party ID');
+    if (
+      !watchPartyId ||
+      typeof watchPartyId !== "string" ||
+      watchPartyId.length < 6
+    ) {
+      toast.error("Invalid watch party ID");
       return;
     }
     try {
       setLoading(true);
       const response = await watchPartyService.post(`/join/${watchPartyId}`);
       setWatchParties([...watchParties, response.data]);
-      setNotifications(notifications.filter((n) => n.watchPartyId !== watchPartyId));
-      toast.success('Joined watch party successfully');
+      setNotifications(
+        notifications.filter((n) => n.watchPartyId !== watchPartyId)
+      );
+      toast.success("Joined watch party successfully");
     } catch (err) {
-      console.error('Error joining watch party:', err);
+      console.error("Error joining watch party:", err);
       const errorMessage =
-        err.response?.data?.error || err.response?.data?.message || 'Failed to join watch party. Please try again.';
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Failed to join watch party. Please try again.";
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -180,33 +184,35 @@ const WatchPartyPlanner = () => {
 
   const startWatchParty = (party) => {
     toast.info(`Starting watch party: ${party.title}`);
-    console.log('Start watch party:', party);
+    console.log("Start watch party:", party);
   };
 
   const handleEventClick = (info) => {
-    const party = watchParties.find((p) => p.id === info.event.extendedProps.watchPartyId);
+    const party = watchParties.find(
+      (p) => p.id === info.event.extendedProps.watchPartyId
+    );
     if (party) {
       window.location.href = `/watchparty/chat/${party.id}`;
     }
   };
 
   const handleEventMouseEnter = (info) => {
-    const tooltip = document.createElement('div');
-    tooltip.className = 'fc-tooltip';
-    tooltip.style.position = 'absolute';
-    tooltip.style.background = 'rgba(0, 0, 0, 0.8)';
-    tooltip.style.color = '#fff';
-    tooltip.style.padding = '8px';
-    tooltip.style.borderRadius = '4px';
-    tooltip.style.fontSize = '12px';
-    tooltip.style.zIndex = '1000';
+    const tooltip = document.createElement("div");
+    tooltip.className = "fc-tooltip";
+    tooltip.style.position = "absolute";
+    tooltip.style.background = "rgba(0, 0, 0, 0.8)";
+    tooltip.style.color = "#fff";
+    tooltip.style.padding = "8px";
+    tooltip.style.borderRadius = "4px";
+    tooltip.style.fontSize = "12px";
+    tooltip.style.zIndex = "1000";
     tooltip.style.top = `${info.jsEvent.pageY + 10}px`;
     tooltip.style.left = `${info.jsEvent.pageX + 10}px`;
     tooltip.innerHTML = `
       <strong>${info.event.title}</strong><br />
-      ${info.event.extendedProps.description || 'No description'}<br />
+      ${info.event.extendedProps.description || "No description"}<br />
       Participants: ${info.event.extendedProps.participantCount || 0}<br />
-      ${info.event.extendedProps.isPublic ? 'Public' : 'Private'}
+      ${info.event.extendedProps.isPublic ? "Public" : "Private"}
     `;
     document.body.appendChild(tooltip);
     info.el.tooltip = tooltip;
@@ -223,41 +229,55 @@ const WatchPartyPlanner = () => {
     return watchParties
       .map((party) => {
         if (!party.title || !party.id || !party.dateTime) {
-          console.error('Invalid party for calendar event:', party);
+          console.error("Invalid party for calendar event:", party);
           return null;
         }
         let startDate;
         try {
           if (
             party.dateTime &&
-            typeof party.dateTime === 'object' &&
-            '_seconds' in party.dateTime &&
-            '_nanoseconds' in party.dateTime
+            typeof party.dateTime === "object" &&
+            "_seconds" in party.dateTime &&
+            "_nanoseconds" in party.dateTime
           ) {
-            startDate = new Date(party.dateTime._seconds * 1000 + party.dateTime._nanoseconds / 1000000);
-          } else if (party.dateTime?.toDate && typeof party.dateTime.toDate === 'function') {
+            startDate = new Date(
+              party.dateTime._seconds * 1000 +
+                party.dateTime._nanoseconds / 1000000
+            );
+          } else if (
+            party.dateTime?.toDate &&
+            typeof party.dateTime.toDate === "function"
+          ) {
             startDate = party.dateTime.toDate();
-          } else if (typeof party.dateTime === 'string') {
+          } else if (typeof party.dateTime === "string") {
             startDate = new Date(party.dateTime);
           } else {
-            throw new Error('Unrecognized dateTime format');
+            throw new Error("Unrecognized dateTime format");
           }
           if (isNaN(startDate.getTime())) {
-            console.error('Invalid dateTime for party:', JSON.stringify(party, null, 2), 'dateTime:', party.dateTime);
+            console.error(
+              "Invalid dateTime for party:",
+              JSON.stringify(party, null, 2),
+              "dateTime:",
+              party.dateTime
+            );
             return null;
           }
         } catch (err) {
           console.error(
-            'Error parsing dateTime for party:',
+            "Error parsing dateTime for party:",
             JSON.stringify(party, null, 2),
-            'dateTime:',
+            "dateTime:",
             party.dateTime,
-            'error:',
+            "error:",
             err.message
           );
           return null;
         }
-        const duration = (party.movies || []).reduce((sum, m) => sum + (m.runtime || 120), 0);
+        const duration = (party.movies || []).reduce(
+          (sum, m) => sum + (m.runtime || 120),
+          0
+        );
         return {
           id: party.id,
           title: party.title,
@@ -265,12 +285,12 @@ const WatchPartyPlanner = () => {
           end: new Date(startDate.getTime() + duration * 60000),
           extendedProps: {
             watchPartyId: party.id,
-            description: party.description || '',
+            description: party.description || "",
             isPublic: party.isPublic,
             participantCount: party.participants?.length || 0,
           },
-          classNames: [party.isPublic ? 'fc-event-public' : 'fc-event-private'],
-          display: 'block',
+          classNames: [party.isPublic ? "fc-event-public" : "fc-event-private"],
+          display: "block",
         };
       })
       .filter((event) => event !== null);
@@ -281,34 +301,47 @@ const WatchPartyPlanner = () => {
     try {
       if (
         party.dateTime &&
-        typeof party.dateTime === 'object' &&
-        '_seconds' in party.dateTime &&
-        '_nanoseconds' in party.dateTime
+        typeof party.dateTime === "object" &&
+        "_seconds" in party.dateTime &&
+        "_nanoseconds" in party.dateTime
       ) {
-        startDate = new Date(party.dateTime._seconds * 1000 + party.dateTime._nanoseconds / 1000000);
-      } else if (party.dateTime?.toDate && typeof party.dateTime.toDate === 'function') {
+        startDate = new Date(
+          party.dateTime._seconds * 1000 + party.dateTime._nanoseconds / 1000000
+        );
+      } else if (
+        party.dateTime?.toDate &&
+        typeof party.dateTime.toDate === "function"
+      ) {
         startDate = party.dateTime.toDate();
-      } else if (typeof party.dateTime === 'string') {
+      } else if (typeof party.dateTime === "string") {
         startDate = new Date(party.dateTime);
       } else {
-        throw new Error('Unrecognized dateTime format');
+        throw new Error("Unrecognized dateTime format");
       }
       if (isNaN(startDate.getTime())) {
-        console.error('Invalid dateTime in isPartyExpired:', party.dateTime);
+        console.error("Invalid dateTime in isPartyExpired:", party.dateTime);
         return true;
       }
     } catch (err) {
-      console.error('Error parsing dateTime in isPartyExpired:', party.dateTime, 'error:', err.message);
+      console.error(
+        "Error parsing dateTime in isPartyExpired:",
+        party.dateTime,
+        "error:",
+        err.message
+      );
       return true;
     }
-    const duration = (party.movies || []).reduce((sum, m) => sum + (m.runtime || 120), 0);
+    const duration = (party.movies || []).reduce(
+      (sum, m) => sum + (m.runtime || 120),
+      0
+    );
     const endTime = startDate.getTime() + duration * 60000;
     return endTime < Date.now();
   };
 
   const handleMovieSelect = (movie) => {
     if (form.movieIds.includes(movie.id.toString())) {
-      toast.info('Movie already selected');
+      toast.info("Movie already selected");
       return;
     }
     setForm({
@@ -330,7 +363,9 @@ const WatchPartyPlanner = () => {
     setForm({
       ...form,
       movieIds: form.movieIds.filter((id) => id !== movieId),
-      selectedMovies: form.selectedMovies.filter((movie) => movie.id.toString() !== movieId),
+      selectedMovies: form.selectedMovies.filter(
+        (movie) => movie.id.toString() !== movieId
+      ),
     });
   };
 
@@ -339,7 +374,9 @@ const WatchPartyPlanner = () => {
       if (calendarRef.current) {
         calendarRef.current.getApi().today();
         const date = calendarRef.current.getApi().getDate();
-        setCurrentMonth(date.toLocaleString('default', { month: 'long', year: 'numeric' }));
+        setCurrentMonth(
+          date.toLocaleString("default", { month: "long", year: "numeric" })
+        );
       }
     };
 
@@ -350,10 +387,13 @@ const WatchPartyPlanner = () => {
           try {
             if (
               party.dateTime &&
-              typeof party.dateTime === 'object' &&
-              '_seconds' in party.dateTime
+              typeof party.dateTime === "object" &&
+              "_seconds" in party.dateTime
             ) {
-              partyDate = new Date(party.dateTime._seconds * 1000 + party.dateTime._nanoseconds / 1000000);
+              partyDate = new Date(
+                party.dateTime._seconds * 1000 +
+                  party.dateTime._nanoseconds / 1000000
+              );
             } else if (party.dateTime.toDate) {
               partyDate = party.dateTime.toDate();
             } else {
@@ -385,10 +425,15 @@ const WatchPartyPlanner = () => {
           : new Date(upcomingParties[0].dateTime);
         if (!isNaN(nextPartyDate.getTime())) {
           calendarRef.current.getApi().gotoDate(nextPartyDate);
-          setCurrentMonth(nextPartyDate.toLocaleString('default', { month: 'long', year: 'numeric' }));
+          setCurrentMonth(
+            nextPartyDate.toLocaleString("default", {
+              month: "long",
+              year: "numeric",
+            })
+          );
         }
       } else {
-        toast.info('No upcoming watch parties');
+        toast.info("No upcoming watch parties");
       }
     };
 
@@ -396,7 +441,9 @@ const WatchPartyPlanner = () => {
       if (calendarRef.current) {
         calendarRef.current.getApi().prev();
         const date = calendarRef.current.getApi().getDate();
-        setCurrentMonth(date.toLocaleString('default', { month: 'long', year: 'numeric' }));
+        setCurrentMonth(
+          date.toLocaleString("default", { month: "long", year: "numeric" })
+        );
       }
     };
 
@@ -404,7 +451,9 @@ const WatchPartyPlanner = () => {
       if (calendarRef.current) {
         calendarRef.current.getApi().next();
         const date = calendarRef.current.getApi().getDate();
-        setCurrentMonth(date.toLocaleString('default', { month: 'long', year: 'numeric' }));
+        setCurrentMonth(
+          date.toLocaleString("default", { month: "long", year: "numeric" })
+        );
       }
     };
 
@@ -412,7 +461,9 @@ const WatchPartyPlanner = () => {
       <div className="custom-toolbar">
         <span className="toolbar-btn-group toolbar-btn-group-left">
           <button onClick={handlePrev}>Previous</button>
-          <button onClick={jumpToToday} className="today-btn">Today</button>
+          <button onClick={jumpToToday} className="today-btn">
+            Today
+          </button>
           <button onClick={handleNext}>Next</button>
         </span>
         <span className="toolbar-month">{currentMonth}</span>
@@ -483,7 +534,6 @@ const WatchPartyPlanner = () => {
           />
           <div className="movie-search-container">
             <WatchPartySearchBar
-              apiBaseUrl="http://localhost:4004/api/tools/watchparty"
               placeholder="Search for movies..."
               onMovieSelect={handleMovieSelect}
             />
@@ -515,12 +565,12 @@ const WatchPartyPlanner = () => {
           <input
             type="text"
             placeholder="Invite User IDs (comma-separated)"
-            value={form.invitedUserIds.join(',')}
+            value={form.invitedUserIds.join(",")}
             onChange={(e) =>
               setForm({
                 ...form,
                 invitedUserIds: e.target.value
-                  .split(',')
+                  .split(",")
                   .map((id) => id.trim())
                   .filter((id) => id),
               })
@@ -560,26 +610,39 @@ const WatchPartyPlanner = () => {
                 : new Date(party.dateTime);
               const isExpired = isPartyExpired(party);
               return (
-                <div key={party.id} className={`watchparty-item ${isExpired ? 'expired' : ''}`}>
+                <div
+                  key={party.id}
+                  className={`watchparty-item ${isExpired ? "expired" : ""}`}
+                >
                   <h4>{party.title}</h4>
-                  <p>{party.description || 'No description'}</p>
+                  <p>{party.description || "No description"}</p>
                   <p>{partyDate.toLocaleString()}</p>
                   <div className="watchparty-meta">
                     <span>
-                      {party.isPublic ? <FaGlobe size={12} /> : <FaLock size={12} />}
-                      {party.isPublic ? ' Public' : ' Private'}
+                      {party.isPublic ? (
+                        <FaGlobe size={12} />
+                      ) : (
+                        <FaLock size={12} />
+                      )}
+                      {party.isPublic ? " Public" : " Private"}
                     </span>
                     <span>
                       <FaUsers size={12} /> {party.participants?.length || 0}
                     </span>
                     {party.movies?.length > 0 && (
                       <span>
-                        <FaClock size={12} />{' '}
-                        {party.movies.reduce((sum, m) => sum + (m.runtime || 120), 0)} min
+                        <FaClock size={12} />{" "}
+                        {party.movies.reduce(
+                          (sum, m) => sum + (m.runtime || 120),
+                          0
+                        )}{" "}
+                        min
                       </span>
                     )}
                   </div>
-                  {isExpired && <div className="watchparty-status">Expired/Closed</div>}
+                  {isExpired && (
+                    <div className="watchparty-status">Expired/Closed</div>
+                  )}
                   <div className="watchparty-movies">
                     {party.movies?.map((movie) => (
                       <span key={movie.id} className="movie-title">
@@ -611,7 +674,10 @@ const WatchPartyPlanner = () => {
 
       <div className="tools-watchparty-calendar">
         <h3>Calendar View</h3>
-        <CustomToolbar currentMonth={currentMonth} setCurrentMonth={setCurrentMonth} />
+        <CustomToolbar
+          currentMonth={currentMonth}
+          setCurrentMonth={setCurrentMonth}
+        />
         <FullCalendar
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -620,7 +686,6 @@ const WatchPartyPlanner = () => {
           eventClick={handleEventClick}
           eventMouseEnter={handleEventMouseEnter}
           eventMouseLeave={handleEventMouseLeave}
-          headerToolbar={false}
           eventContent={(arg) => (
             <div>
               <b>{arg.event.title}</b>
@@ -633,14 +698,21 @@ const WatchPartyPlanner = () => {
           dayMaxEvents={3}
           moreLinkContent={({ num }) => `+${num} more`}
           datesSet={(dateInfo) => {
-            setCurrentMonth(dateInfo.view.currentStart.toLocaleString('default', { month: 'long', year: 'numeric' }));
+            setCurrentMonth(
+              dateInfo.view.currentStart.toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })
+            );
           }}
         />
       </div>
 
       <div className="tools-watchparty-public">
         <h3>Public Watch Parties</h3>
-        {publicWatchParties.length === 0 && <p>No public watch parties available.</p>}
+        {publicWatchParties.length === 0 && (
+          <p>No public watch parties available.</p>
+        )}
         <div className="watchparty-grid">
           {publicWatchParties.map((party) => {
             const partyDate = party.dateTime._seconds
@@ -651,7 +723,12 @@ const WatchPartyPlanner = () => {
             const isExpired = isPartyExpired(party);
             const isJoined = party.participants?.includes(user.uid);
             return (
-              <div key={party.id} className={`tools-watchparty-item ${isExpired ? 'expired' : ''}`}>
+              <div
+                key={party.id}
+                className={`tools-watchparty-item ${
+                  isExpired ? "expired" : ""
+                }`}
+              >
                 <h4>{party.title}</h4>
                 <p>{party.description}</p>
                 <p>{partyDate.toLocaleString()}</p>
@@ -664,12 +741,18 @@ const WatchPartyPlanner = () => {
                   </span>
                   {party.movies?.length > 0 && (
                     <span>
-                      <FaClock size={12} />{' '}
-                      {party.movies.reduce((sum, m) => sum + (m.runtime || 120), 0)} min
+                      <FaClock size={12} />{" "}
+                      {party.movies.reduce(
+                        (sum, m) => sum + (m.runtime || 120),
+                        0
+                      )}{" "}
+                      min
                     </span>
                   )}
                 </div>
-                {isExpired && <div className="watchparty-status">Expired/Closed</div>}
+                {isExpired && (
+                  <div className="watchparty-status">Expired/Closed</div>
+                )}
                 <div className="watchparty-actions">
                   {!isJoined && !isExpired && (
                     <button
@@ -700,11 +783,13 @@ const WatchPartyPlanner = () => {
         {notifications.map((notification) => (
           <div key={notification.id} className="tools-notification-item">
             <p>{notification.message}</p>
-            {notification.type === 'watchPartyInvite' && (
+            {notification.type === "watchPartyInvite" && (
               <button
                 onClick={() => joinWatchParty(notification.watchPartyId)}
                 disabled={watchParties.some(
-                  (p) => p.id === notification.watchPartyId && p.participants.includes(user.uid)
+                  (p) =>
+                    p.id === notification.watchPartyId &&
+                    p.participants.includes(user.uid)
                 )}
                 className="watchparty-action-button"
               >

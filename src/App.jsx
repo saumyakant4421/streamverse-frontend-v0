@@ -10,7 +10,7 @@ import FranchiseSearch from './pages/Franchise';
 import FranchisePage from './components/FranchisePage';
 import FranchiseDetail from './pages/FranchiseDetail';
 import WatchPartyChat from './pages/WatchPartyChat';
-import SocialPage from './pages/Socials';
+// import SocialPage from './pages/Socials';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from "./context/AuthContext";
 

@@ -1,14 +1,12 @@
-
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import { useAuth } from '../context/AuthContext';
-import Navbar from './Navbar';
-import '../styles/franchise-search.scss';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { franchiseService } from "../lib/services";
+import Navbar from "./Navbar";
+import "../styles/franchise-search.scss";
 
 const FranchiseSearch = () => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [franchises, setFranchises] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,13 +18,13 @@ const FranchiseSearch = () => {
     setIsLoading(true);
     const timeoutId = setTimeout(async () => {
       try {
-        const response = await axios.get('http://localhost:4014/api/franchises/search', {
+        const response = await franchiseService.get("/search", {
           params: { query },
         });
         setFranchises(response.data);
       } catch (error) {
-        console.error('Error searching franchises:', error);
-        toast.error('Failed to search franchises. Please try again.');
+        console.error("Error searching franchises:", error);
+        toast.error("Failed to search franchises. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -36,13 +34,17 @@ const FranchiseSearch = () => {
 
   // Define popular franchises (aligned with custom franchise pages)
   const popularFranchises = [
-    { name: 'MCU', id: 'mcu', path: '/popularfranchises/mcu' },
-    { name: 'DCEU', id: 'dceu', path: '/popularfranchises/dceu' },
-    { name: 'DCU', id: 'dcu', path: '/popularfranchises/dcu' },
-    { name: 'Star Wars', id: 'starwars', path: '/popularfranchises/starwars' },
-    { name: 'Aliens', id: 'aliens', path: '/popularfranchises/aliens' },
-    { name: 'Harry Potter', id: 'harrypotter', path: '/popularfranchises/harrypotter' },
-    { name: 'Lord of the Rings', id: 'lotr', path: '/popularfranchises/lotr' },
+    { name: "MCU", id: "mcu", path: "/popularfranchises/mcu" },
+    { name: "DCEU", id: "dceu", path: "/popularfranchises/dceu" },
+    { name: "DCU", id: "dcu", path: "/popularfranchises/dcu" },
+    { name: "Star Wars", id: "starwars", path: "/popularfranchises/starwars" },
+    { name: "Aliens", id: "aliens", path: "/popularfranchises/aliens" },
+    {
+      name: "Harry Potter",
+      id: "harrypotter",
+      path: "/popularfranchises/harrypotter",
+    },
+    { name: "Lord of the Rings", id: "lotr", path: "/popularfranchises/lotr" },
   ];
 
   return (
