@@ -16,7 +16,7 @@ import {
   FaComment,
   FaPlay,
 } from "react-icons/fa";
-import WatchPartySearchBar from "./WatchPartySearchBar";
+import WatchPartySearchBar from "./watchpartySearchBar";
 import { watchPartyService } from "../lib/services"; // Import watchPartyService
 import "../styles/watchparty.scss";
 import "../styles/calendar.scss";
