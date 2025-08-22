@@ -1,50 +1,64 @@
+
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 
-// Check if we're in production (no proxy available)
+// Toggle for using local or remote (Render) services
+const useLocal = import.meta.env.VITE_USE_LOCAL_API === 'true';
 const isProduction = import.meta.env.PROD;
 
+// Helper to choose baseURL for each service
+function getBaseURL(localPath, remoteEnvVar, remoteDefault) {
+  if (isProduction) {
+    return useLocal ? localPath : (import.meta.env[remoteEnvVar] || remoteDefault);
+  } else {
+    return localPath;
+  }
+}
+
+// All service instances
 const movieService = axios.create({
-  baseURL: isProduction
-    ? (import.meta.env.VITE_MOVIE_API_URL || "https://streamverse-movie-service.onrender.com/api/movies")
-    : "/api/movies",
+  baseURL: getBaseURL(
+    "/api/movies",
+    "VITE_MOVIE_API_URL",
+    "https://streamverse-movie-service.onrender.com/api/movies"
+  ),
 });
 
 const userService = axios.create({
-  baseURL: isProduction
-    ? (import.meta.env.VITE_USER_API_URL || "https://backend-userservice-v0.onrender.com/api/users")
-    : "/api/user",
-});
-
-const watchPartyService = axios.create({
-  baseURL: isProduction
-    ? (import.meta.env.VITE_WATCHPARTY_API_URL || "https://your-watchparty-module.onrender.com/api/tools/watchparty")
-    : "/api/tools/watchparty",
-});
-
-const recommendationService = axios.create({
-  baseURL: isProduction
-    ? (import.meta.env.VITE_RECOMMENDATION_API_URL || "https://your-recommendation-module.onrender.com/api/recommendations")
-    : "/api/recommendations",
-});
-
-const marathonService = axios.create({
-  baseURL: isProduction
-    ? (import.meta.env.VITE_MARATHON_API_URL || "https://your-marathon-module.onrender.com/api/tools/marathon")
-    : "/api/tools/marathon",
+  baseURL: getBaseURL(
+    "/api/user",
+    "VITE_USER_API_URL",
+    "https://backend-userservice-v0.onrender.com/api/user"
+  ),
 });
 
 const franchiseService = axios.create({
-  baseURL: isProduction
-    ? (import.meta.env.VITE_FRANCHISE_API_URL || "https://backend-franchiseservice-v0.onrender.com/api/franchises")
-    : "/api/franchises",
+  baseURL: getBaseURL(
+    "/api/franchises",
+    "VITE_FRANCHISE_API_URL",
+    "https://backend-franchiseservice-v0.onrender.com/api/franchises"
+  ),
 });
-// Additional Service (new, only live URL for production)
+
 const additionalService = axios.create({
-  baseURL: isProduction
-    ? (import.meta.env.VITE_ADDITIONAL_API_URL || "https://backend-additionalservice-v0.onrender.com/api/additional")
-    : "/api/additional",
+  baseURL: getBaseURL(
+    "/api/additional",
+    "VITE_ADDITIONAL_API_URL",
+    "https://backend-additionalservice-v0.onrender.com/api/additional"
+  ),
 });
+
+// Always local (not deployed)
+const recommendationService = axios.create({
+  baseURL: "/api/recommendations",
+});
+const watchPartyService = axios.create({
+  baseURL: "/api/tools/watchparty",
+});
+const marathonService = axios.create({
+  baseURL: "/api/tools/marathon",
+});
+// Add socialService here if needed
 
 const services = [
   movieService,
@@ -56,6 +70,7 @@ const services = [
   additionalService,
 ];
 
+// Attach interceptors for auth and 401 handling
 services.forEach((service) => {
   service.interceptors.request.use(async (config) => {
     const user = getAuth().currentUser;

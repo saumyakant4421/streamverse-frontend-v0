@@ -235,9 +235,11 @@ const MovieDetailPage = () => {
         const posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
         await userService.post(`/watched/add`, {
           uid: user.uid,
-          id: movie.id,
-          title: movie.title,
-          poster: posterPath,
+          movie: {
+            id: movie.id,
+            title: movie.title,
+            poster: posterPath,
+          },
         });
         setIsWatched(true);
         toast.success("Added to watched list");
