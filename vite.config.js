@@ -16,16 +16,24 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api/franchises": {
-        target: "http://localhost:4014",
+        target: "https://backend-franchiseservice-v0.onrender.com",
         changeOrigin: true,
+        rewrite: path => path.replace(/^\/api\/franchises/, '/api/franchises'),
       },
       "/api/movies": {
-        target: "http://localhost:4001",
+        target: "https://streamverse-movie-service.onrender.com",
         changeOrigin: true,
+        rewrite: path => path.replace(/^\/api\/movies/, '/api/movies'),
       },
       "/api/user": {
-        target: "http://localhost:5001",
+        target: "https://backend-userservice-v0.onrender.com",
         changeOrigin: true,
+        rewrite: path => path.replace(/^\/api\/user/, '/api/users'),
+      },
+      "/api/additional": {
+        target: "https://backend-additionalservice-v0.onrender.com",
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api\/additional/, '/api/additional'),
       },
       "/api/tools/watchparty": {
         target: "http://localhost:4004",

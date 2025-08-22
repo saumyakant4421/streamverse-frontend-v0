@@ -5,14 +5,14 @@ import { getAuth } from "firebase/auth";
 const isProduction = import.meta.env.PROD;
 
 const movieService = axios.create({
-  baseURL: isProduction 
-    ? (import.meta.env.VITE_MOVIE_API_URL || "https://your-movie-module.onrender.com/api/movies")
+  baseURL: isProduction
+    ? (import.meta.env.VITE_MOVIE_API_URL || "https://streamverse-movie-service.onrender.com/api/movies")
     : "/api/movies",
 });
 
 const userService = axios.create({
   baseURL: isProduction
-    ? (import.meta.env.VITE_USER_API_URL || "https://your-user-module.onrender.com/api/user")
+    ? (import.meta.env.VITE_USER_API_URL || "https://backend-userservice-v0.onrender.com/api/users")
     : "/api/user",
 });
 
@@ -36,8 +36,14 @@ const marathonService = axios.create({
 
 const franchiseService = axios.create({
   baseURL: isProduction
-    ? (import.meta.env.VITE_FRANCHISE_API_URL || "https://your-franchise-module.onrender.com/api/franchises")
+    ? (import.meta.env.VITE_FRANCHISE_API_URL || "https://backend-franchiseservice-v0.onrender.com/api/franchises")
     : "/api/franchises",
+});
+// Additional Service (new, only live URL for production)
+const additionalService = axios.create({
+  baseURL: isProduction
+    ? (import.meta.env.VITE_ADDITIONAL_API_URL || "https://backend-additionalservice-v0.onrender.com/api/additional")
+    : "/api/additional",
 });
 
 const services = [
@@ -47,6 +53,7 @@ const services = [
   recommendationService,
   marathonService,
   franchiseService,
+  additionalService,
 ];
 
 services.forEach((service) => {
@@ -58,6 +65,19 @@ services.forEach((service) => {
     }
     return config;
   });
+
+  service.interceptors.response.use(
+    response => response,
+    async error => {
+      if (error.response && error.response.status === 401) {
+        // Log out user and redirect to login
+        const { signOut } = await import("firebase/auth");
+        await signOut(getAuth());
+        window.location.href = "/login";
+      }
+      return Promise.reject(error);
+    }
+  );
 });
 
 export {
@@ -67,4 +87,5 @@ export {
   recommendationService,
   marathonService,
   franchiseService,
+  additionalService,
 };
