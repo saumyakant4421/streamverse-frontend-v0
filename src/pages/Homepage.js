@@ -138,7 +138,16 @@ const Homepage = () => {
 
   const MovieCard = ({ movie, onAddToWatchlist }) => {
     return (
-      <div className="movie-card">
+      <div
+        className="movie-card"
+        onClick={() => navigate(`/movie/${movie.id}`)}
+        style={{ cursor: "pointer" }}
+        tabIndex={0}
+        role="button"
+        onKeyPress={e => {
+          if (e.key === "Enter" || e.key === " ") navigate(`/movie/${movie.id}`);
+        }}
+      >
         <div className="poster-container">
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
