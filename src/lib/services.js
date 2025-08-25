@@ -24,12 +24,17 @@ const movieService = axios.create({
   ),
 });
 
+// Build user service baseURL with safeguard for legacy '/api/users' path
+let userBase = getBaseURL(
+  "/api/user",
+  "VITE_USER_API_URL",
+  "https://backend-userservice-v0.onrender.com/api/user"
+);
+if (isProduction && /\/api\/users(\/?$)/.test(userBase)) {
+  userBase = userBase.replace(/\/api\/users(\/?$)/, "/api/user$1");
+}
 const userService = axios.create({
-  baseURL: getBaseURL(
-    "/api/user",
-    "VITE_USER_API_URL",
-    "https://backend-userservice-v0.onrender.com/api/user"
-  ),
+  baseURL: userBase,
 });
 
 const franchiseService = axios.create({

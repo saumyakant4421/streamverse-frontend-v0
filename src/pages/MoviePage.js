@@ -485,12 +485,15 @@ const MovieDetailPage = () => {
                 watchlistLoading ? "loading" : ""
               }`}
               onClick={handleAddToWatchlist}
-              disabled={watchlistLoading}
+              disabled={watchlistLoading || isWatched}
+              title={isWatched ? "Already watched. Cannot add to watchlist." : undefined}
             >
               {watchlistLoading
                 ? "Updating..."
                 : isInWatchlist
                 ? "Remove from Watchlist"
+                : isWatched
+                ? "Already Watched"
                 : "Add to Watchlist"}
             </button>
             <button
@@ -579,6 +582,12 @@ const MovieDetailPage = () => {
                   key={movie.id}
                   className="similar-movie-card"
                   onClick={() => navigate(`/movie/${movie.id}`)}
+                  style={{ cursor: "pointer" }}
+                  tabIndex={0}
+                  role="button"
+                  onKeyPress={e => {
+                    if (e.key === "Enter" || e.key === " ") navigate(`/movie/${movie.id}`);
+                  }}
                 >
                   <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
