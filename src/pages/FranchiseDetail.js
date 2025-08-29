@@ -21,10 +21,8 @@ const FallbackNavbar = () => (
   </nav>
 );
 
-// Fallback image
-const FALLBACK_POSTER = `${
-  import.meta.env.PUBLIC_URL || ""
-}/images/fallback-poster.jpg`;
+// Fallback image (use an existing public asset)
+const FALLBACK_POSTER = "/franchises/wallpaperflare.com_wallpaper.jpg";
 
 const FranchiseTimeline = ({ movies }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -111,18 +109,18 @@ const FranchiseTimeline = ({ movies }) => {
                   <img
                     src={
                       movie.poster_path
-                        ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
-                        : `${
-                            import.meta.env.PUBLIC_URL || ""
-                          }/images/placeholder.jpg`
+                        ? movie.poster_path.startsWith("http")
+                          ? movie.poster_path
+                          : movie.poster_path.startsWith("/assets/")
+                            ? movie.poster_path
+                            : `https://image.tmdb.org/t/p/w200${movie.poster_path}`
+: "/franchises/wallpaperflare.com_wallpaper.jpg"
                     }
                     alt={movie.title}
                     className="fd-timeline-poster"
                     loading="lazy"
                     onError={(e) => {
-                      e.target.src = `${
-                        import.meta.env.PUBLIC_URL || ""
-                      }/images/placeholder.jpg`;
+e.target.src = "/franchises/wallpaperflare.com_wallpaper.jpg";
                     }}
                   />
                 </div>
@@ -388,10 +386,14 @@ const FranchiseDetail = () => {
     );
   }
 
-  const backdropImage =
-    imageError || !franchise.poster_path
-      ? FALLBACK_POSTER
-      : franchise.poster_path;
+
+
+// Use backdrop_poster for the background image, preferring local mapping for curated franchises
+const localFranchise = franchisesData?.franchises?.find((f) => f.id === collectionId);
+let backdropPath = franchise.backdrop_poster;
+// Prefer the local JSON backdrop if available
+const localBackdrop = localFranchise?.backdrop_poster;
+const backdropImage = (localBackdrop || backdropPath) ? (localBackdrop || backdropPath) : FALLBACK_POSTER;
 
   return (
     <div className="fd-franchise-detail-container">

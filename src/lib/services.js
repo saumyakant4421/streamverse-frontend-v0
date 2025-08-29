@@ -53,9 +53,12 @@ const additionalService = axios.create({
   ),
 });
 
-// Always local (not deployed)
 const recommendationService = axios.create({
-  baseURL: "/api/recommendations",
+  baseURL: getBaseURL(
+    "/api/recommendations",
+    "VITE_RECOMMENDATION_API_URL",
+    "https://recommendation-api-127j.onrender.com/api/recommendations"
+  ),
 });
 const watchPartyService = axios.create({
   baseURL: "/api/tools/watchparty",

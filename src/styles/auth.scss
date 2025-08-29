@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 * {
@@ -5,6 +6,16 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Specific style for Sign In button in auth form */
+.auth-box form button[type="submit"] {
+  background: #232323;
+  color: #fff;
+  transition: background 0.2s;
+}
+.auth-box form button[type="submit"]:hover:not(:disabled) {
+  background: #000;
 }
 
 /* Password toggle icons using CSS */

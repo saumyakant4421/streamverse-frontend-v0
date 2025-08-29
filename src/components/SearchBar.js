@@ -117,12 +117,14 @@ const SearchBar = ({ placeholder = "Search movies..." }) => {
         onBlur={handleSearchBlur}
         className="search-input"
       />
-      <FaSearch className="search-icon" />
-      {searchQuery && (
-        <button className="clear-search" onClick={handleCloseSearch}>
-          ×
-        </button>
-      )}
+      <div className="search-bar-icons">
+        <FaSearch className="search-icon" />
+        {searchQuery && (
+          <button className="clear-search-btn" onClick={handleCloseSearch}>
+            ×
+          </button>
+        )}
+      </div>
       {showSearchResults && (
         <div className="search-results">
           {isSearchLoading ? (
