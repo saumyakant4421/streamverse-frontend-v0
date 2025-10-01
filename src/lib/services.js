@@ -38,11 +38,8 @@ const userService = axios.create({
 });
 
 const franchiseService = axios.create({
-  baseURL: getBaseURL(
-    "/api/franchises",
-    "VITE_FRANCHISE_API_URL",
-    "https://backend-franchiseservice-v0.onrender.com/api/franchises"
-  ),
+  baseURL: import.meta.env.VITE_FRANCHISE_API_URL || 
+    (useLocal ? "http://localhost:5003/api/franchises" : "https://franchise-service-285531167611.us-central1.run.app/api/franchises"),
 });
 
 const additionalService = axios.create({

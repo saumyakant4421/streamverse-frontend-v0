@@ -9,14 +9,16 @@ export default defineConfig(({ mode }) => {
   // Define targets for each service
   const franchiseTarget = useLocal
     ? 'http://localhost:5003'
-    : 'https://backend-franchiseservice-v0.onrender.com';
+    : 'https://franchise-service-285531167611.us-central1.run.app';
   const movieTarget = useLocal
-    ? 'http://localhost:4001' // match backend/movie-service/.env PORT
-    : 'https://streamverse-movie-service.onrender.com';
+    ? 'https://movie-service-285531167611.us-central1.run.app' // match backend/movie-service/.env PORT
+    // : 'https://streamverse-movie-service.onrender.com';
+    : 'https://movie-service-285531167611.us-central1.run.app';
   const userTarget = useLocal
-    ? 'http://localhost:5001'
+    ? 'https://backend-userservice-v0.onrender.com'
     : 'https://backend-userservice-v0.onrender.com';
-  const additionalTarget = useLocal
+  // Prefer local additional service during development or when VITE_USE_LOCAL_API=true
+  const additionalTarget = useLocal || mode === 'development'
     ? 'http://localhost:5004'
     : 'https://backend-additionalservice-v0.onrender.com';
 
