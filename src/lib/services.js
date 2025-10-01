@@ -3,7 +3,7 @@ import axios from "axios";
 import { getAuth } from "firebase/auth";
 
 // Toggle for using local or remote (Render) services
-const useLocal = import.meta.env.VITE_USE_LOCAL_API === 'true';
+const useLocal = false;
 const isProduction = import.meta.env.PROD;
 
 // Helper to choose baseURL for each service
@@ -37,9 +37,17 @@ const userService = axios.create({
   baseURL: userBase,
 });
 
+// Build franchise service base URL and ensure it always targets the '/api/franchises' path.
+let _franchiseBase = import.meta.env.VITE_FRANCHISE_API_URL ||
+  (useLocal ? "http://localhost:5003/api/franchises" : "https://franchise-service-285531167611.us-central1.run.app/api/franchises");
+// Trim trailing slashes
+_franchiseBase = _franchiseBase.replace(/\/+$/, '');
+// If the provided value doesn't already include the '/api/franchises' path, append it.
+if (!/\/api\/franchises(\/?$)/.test(_franchiseBase)) {
+  _franchiseBase = _franchiseBase + '/api/franchises';
+}
 const franchiseService = axios.create({
-  baseURL: import.meta.env.VITE_FRANCHISE_API_URL || 
-    (useLocal ? "http://localhost:5003/api/franchises" : "https://franchise-service-285531167611.us-central1.run.app/api/franchises"),
+  baseURL: _franchiseBase,
 });
 
 const additionalService = axios.create({
