@@ -23,9 +23,9 @@ const NotificationPanel = ({ onClose }) => {
         setNotifications(docs);
       }, (error) => {
         console.error("Firestore notifications listener error:", error);
-        if (error.code === 'permission-denied') {
-          console.log("Firestore access denied - check security rules");
-        }
+  if (error.code === 'permission-denied') {
+          
+  }
       });
       return () => unsubscribe();
     } catch (error) {
@@ -68,7 +68,7 @@ const NotificationPanel = ({ onClose }) => {
       } catch (error) {
         console.error("Error fetching usernames:", error);
         if (error.code === 'permission-denied') {
-          console.log("Firestore access denied - check security rules");
+          
         }
       }
     };

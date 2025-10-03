@@ -22,7 +22,7 @@ const storage = getStorage(app); // Initialize Firebase Storage
 // Enable persistence
 setPersistence(auth, browserLocalPersistence)
   .then(() => {
-    console.log('Firebase persistence enabled');
+    
   })
   .catch((error) => {
     console.error('Error enabling persistence:', error);

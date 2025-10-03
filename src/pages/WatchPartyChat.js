@@ -62,11 +62,11 @@ const WatchPartyChat = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log(`Fetching watch party with ID: ${watchPartyId}`);
+      
       const response = await watchPartyService.get(`/${watchPartyId}`);
       setWatchParty(response.data);
 
-      console.log(`Fetching users for watchPartyId: ${watchPartyId}`);
+      
       const usersResponse = await watchPartyService.get(
         `/${watchPartyId}/users`
       );
@@ -83,22 +83,18 @@ const WatchPartyChat = () => {
         localStorage.setItem("publicKey", keys.publicKey);
         localStorage.setItem("privateKey", keys.privateKey);
         setUserKeys(keys);
-        console.log(
-          `Sending public key for user ${user.uid} to ${watchPartyId}`
-        );
+        
         const postResponse = await watchPartyService.post(
           `/${watchPartyId}/users`,
           { userId: user.uid, publicKey: keys.publicKey }
         );
-        console.log("Public key POST response:", postResponse.data);
+        
       } else {
         setUserKeys({
           publicKey: localStorage.getItem("publicKey"),
           privateKey: localStorage.getItem("privateKey"),
         });
-        console.log(
-          `Re-sending public key for user ${user.uid} to ${watchPartyId}`
-        );
+        
         await watchPartyService.post(`/${watchPartyId}/users`, {
           userId: user.uid,
           publicKey: localStorage.getItem("publicKey"),
@@ -188,7 +184,7 @@ const WatchPartyChat = () => {
         console.error("Error fetching messages:", error);
         // Handle permission denied or other Firestore errors gracefully
         if (error.code === 'permission-denied') {
-          console.log("Firestore access denied - check security rules");
+          
         }
       }
     }, (error) => {
@@ -229,7 +225,7 @@ const WatchPartyChat = () => {
       } catch (error) {
         console.error("Error fetching usernames:", error);
         if (error.code === 'permission-denied') {
-          console.log("Firestore access denied - check security rules");
+          
         }
       }
     };

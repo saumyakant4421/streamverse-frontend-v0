@@ -32,7 +32,7 @@ const WatchPartySearchBar = ({ onMovieSelect }) => {
         setSearchResults(response.data || []);
       } catch (error) {
         if (error.name === 'AbortError') {
-          console.log("Previous search request canceled");
+          
         } else {
           console.error(
             "Error searching movies:",

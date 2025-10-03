@@ -39,14 +39,6 @@ const FranchiseTimeline = ({ movies }) => {
       newActiveIndex = movies.length - 1;
     }
     setActiveIndex(newActiveIndex);
-    console.log(
-      "Current Index:",
-      currentIndex,
-      "Active Index:",
-      newActiveIndex,
-      "Movies Length:",
-      movies.length
-    );
   }, [currentIndex, movies.length]);
 
   const nextSlide = () => {

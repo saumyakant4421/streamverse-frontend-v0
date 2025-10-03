@@ -61,7 +61,7 @@ const UserPage = () => {
   const markAsWatched = async (movie) => {
     try {
       await userService.post(`/watched/add`, { uid: user.uid, movie });
-      console.log(movie.id);
+      
       removeFromWatchlist(movie.id);
       fetchWatchedMovies();
     } catch (error) {

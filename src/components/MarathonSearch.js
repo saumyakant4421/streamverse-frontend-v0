@@ -24,17 +24,17 @@ const MarathonSearch = ({ onAddToBucket, bucket = [] }) => {
     const abortController = new AbortController();
 
     const searchMovies = async () => {
-      console.log("Searching with query:", searchQuery);
+      
       try {
         const response = await marathonService.get("/search", {
           params: { query: searchQuery },
           signal: abortController.signal,
         });
-        console.log("Search response:", response.data);
+        
         setSearchResults(response.data || []);
       } catch (error) {
         if (error.name === 'AbortError') {
-          console.log("Previous search request canceled");
+          
         } else {
           console.error("Error searching movies:", error);
           toast.error(error.response?.data?.error || "Failed to search movies");

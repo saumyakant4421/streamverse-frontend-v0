@@ -17,12 +17,7 @@ const FranchisePage = () => {
       setError(null);
       try {
         const response = await franchiseService.get(`/${collectionId}`);
-        console.log(
-          "Raw API Response:",
-          JSON.stringify(response.data, null, 2)
-        );
-        console.log("totalCast:", response.data.totalCast);
-        console.log("totalDirectors:", response.data.totalDirectors);
+        
         setFranchise(response.data);
       } catch (error) {
         console.error("Error fetching franchise:", error);
@@ -39,26 +34,7 @@ const FranchisePage = () => {
 
   useEffect(() => {
     if (franchise) {
-      console.log(
-        "Processed totalCast:",
-        JSON.stringify(franchise.totalCast, null, 2)
-      );
-      console.log(
-        "Processed totalDirectors:",
-        JSON.stringify(franchise.totalDirectors, null, 2)
-      );
-      console.log(
-        "Cast with profile paths:",
-        franchise.totalCast?.filter((p) => p?.profile_path)?.length || 0,
-        "out of",
-        franchise.totalCast?.length || 0
-      );
-      console.log(
-        "Directors with profile paths:",
-        franchise.totalDirectors?.filter((p) => p?.profile_path)?.length || 0,
-        "out of",
-        franchise.totalDirectors?.length || 0
-      );
+      
     }
   }, [franchise]);
 
@@ -67,8 +43,7 @@ const FranchisePage = () => {
       import.meta.env.PUBLIC_URL || ""
     }/images/placeholder.jpg`;
     const fullPlaceholderUrl = `${window.location.origin}${placeholderPath}`;
-    console.log("Placeholder image path:", placeholderPath);
-    console.log("Full placeholder URL:", fullPlaceholderUrl);
+    
     if (e.target.src !== fullPlaceholderUrl) {
       console.warn(`Image failed to load: ${e.target.src}`);
       e.target.src = fullPlaceholderUrl;

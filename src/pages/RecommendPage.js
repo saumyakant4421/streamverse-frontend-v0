@@ -41,7 +41,6 @@ const RecommendPage = () => {
 
   const setupAuthToken = async () => {
     if (!user) {
-      console.log("No user authenticated");
       setError("Please log in to get recommendations");
       return false;
     }
@@ -49,7 +48,7 @@ const RecommendPage = () => {
       const auth = getAuth();
       const token = await auth.currentUser.getIdToken(true);
       if (!token) throw new Error("Failed to retrieve ID token");
-      console.log("Auth token retrieved successfully");
+      
       return true;
     } catch (error) {
       console.error("Error getting auth token:", error.message);
@@ -69,9 +68,7 @@ const RecommendPage = () => {
     initializeAuthAndFetch();
 
     if (userId) {
-      console.log(
-        `Setting up Firestore listener for chat history for user: ${userId}`
-      );
+      
       const unsubscribe = onSnapshot(
         collection(db, "chat_history", userId, "messages"),
         (snapshot) => {
@@ -111,8 +108,7 @@ const RecommendPage = () => {
         }
       );
       return () => {
-        console.log("Unsubscribing from Firestore snapshot");
-        unsubscribe();
+          unsubscribe();
         isMounted = false;
       };
     }
@@ -145,7 +141,7 @@ const RecommendPage = () => {
         { timeout: 120000 }
       );
       const recs = Array.isArray(response.data) ? response.data : [];
-      console.log("Personalized recommendations for user", userId, ":", recs);
+      
       setPersonalizedRecommendations(recs);
     } catch (error) {
       console.error(
@@ -172,7 +168,7 @@ const RecommendPage = () => {
     try {
       const tokenSet = await setupAuthToken();
       if (!tokenSet) throw new Error("Token setup failed");
-      console.log("Sending chat request for user", userId, ":", chatQuery);
+      
 
       setChatHistory((prev) => [
         ...prev,
@@ -194,7 +190,7 @@ const RecommendPage = () => {
         : [];
       const textResponse =
         response.data.text_response || "Here are your movie recommendations!";
-      console.log("Chat recommendations for user", userId, ":", recs);
+      
 
       setChatRecommendations(recs);
       setChatBotResponseText(textResponse);
@@ -208,11 +204,7 @@ const RecommendPage = () => {
         error.response?.data
       );
       if (error.code === "ECONNABORTED" && retryCount < MAX_RETRIES) {
-        console.log(
-          `Retrying chat recommendations (attempt ${
-            retryCount + 1
-          }/${MAX_RETRIES})`
-        );
+        
         setRetryCount(retryCount + 1);
         setTimeout(() => fetchChatRecommendations(), 1000 * (retryCount + 1));
       } else {
@@ -236,7 +228,7 @@ const RecommendPage = () => {
         feedback,
         timestamp: serverTimestamp(),
       });
-      console.log(`Feedback recorded: ${feedback} for movie ${movieId}`);
+      
     } catch (error) {
       console.error("Error recording feedback:", error.message);
     }

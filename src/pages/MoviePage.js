@@ -52,7 +52,7 @@ const MovieDetailPage = () => {
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [commentError, setCommentError] = useState(null);
 
-  console.log("Current user:", user);
+  
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -90,7 +90,7 @@ const MovieDetailPage = () => {
       setCommentsLoading(true);
       setCommentError(null);
       const response = await movieService.get(`/comments/${id}`); // Assuming comments under movieService
-      console.log("Fetched comments:", response.data);
+      
       setComments(response.data || []);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -358,7 +358,7 @@ const MovieDetailPage = () => {
                     <p>No comments yet.</p>
                   ) : (
                     comments.map((comment) => {
-                      console.log("Rendering comment:", comment);
+                      
                       let formattedDate = "Unknown date";
                       try {
                         const date = comment.createdAt?.seconds

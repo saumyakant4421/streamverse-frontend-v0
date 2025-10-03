@@ -114,7 +114,7 @@ const Homepage = () => {
     try {
       const isInWatchlist = watchlist.some((item) => item.id === movie.id);
       if (isInWatchlist) {
-        console.log("Movie already in watchlist");
+      
         return;
       }
 

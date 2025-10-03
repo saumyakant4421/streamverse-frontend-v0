@@ -120,7 +120,7 @@ const WatchPartyPlanner = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log("Create watch party payload:", payload);
+      
       const response = await watchPartyService.post("/create", payload);
       if (!response.data.id || typeof response.data.id !== "string") {
         throw new Error("Invalid watch party ID");
@@ -184,7 +184,7 @@ const WatchPartyPlanner = () => {
 
   const startWatchParty = (party) => {
     toast.info(`Starting watch party: ${party.title}`);
-    console.log("Start watch party:", party);
+    
   };
 
   const handleEventClick = (info) => {
