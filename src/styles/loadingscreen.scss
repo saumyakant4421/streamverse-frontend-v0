@@ -108,6 +108,7 @@ $glass-shadow: rgba(0, 0, 0, 0.1);
   gap: 32px;
   position: relative;
   min-width: 300px;
+  max-width: 820px; /* prevent overly wide container on large screens */
 }
 
 .dynamic-text {
@@ -251,4 +252,49 @@ $glass-shadow: rgba(0, 0, 0, 0.1);
     transform: translateX(105vw) translateY(math.random(15) - 7vh);
     opacity: 0;
   }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .glassmorphic-container {
+    padding: 20px 22px;
+    border-radius: 16px;
+  }
+
+  .loading-content {
+    gap: 18px;
+    min-width: 0;
+    max-width: 320px;
+  }
+
+  .dynamic-text { gap: 2px; }
+
+  .letter {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .loading-effect { width: 180px; height: 4px; }
+
+  .loading-status { font-size: 12px; }
+
+  /* reduce particle effects on tiny screens for performance */
+  .particles { display: none; }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .glassmorphic-container { padding: 28px 36px; border-radius: 20px; }
+  .loading-content { gap: 20px; max-width: 640px; }
+  .letter { font-size: 28px; }
+  .loading-effect { width: 200px; }
+  .loading-status { font-size: 13px; }
+  /* soften particle count/visibility on medium screens */
+  .particle { opacity: 0.6; filter: blur(0.6px); }
+}
+
+@media (min-width: 1400px) {
+  /* slightly larger typography on very large screens */
+  .glassmorphic-container { padding: 48px 90px; }
+  .letter { font-size: 48px; }
+  .loading-effect { width: 320px; }
 }

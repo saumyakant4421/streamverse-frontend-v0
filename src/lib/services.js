@@ -3,7 +3,7 @@ import axios from "axios";
 import { getAuth } from "firebase/auth";
 
 // Toggle for using local or remote (Render) services
-const useLocal = false;
+const useLocal = import.meta.env.VITE_USE_LOCAL_API === 'true';
 const isProduction = import.meta.env.PROD;
 
 // Helper to choose baseURL for each service
@@ -16,12 +16,16 @@ function getBaseURL(localPath, remoteEnvVar, remoteDefault) {
 }
 
 // All service instances
+// When running locally (not production), use the deployed movie-service run.app URL directly
+// This ensures the frontend talks to the hosted movie service while other services may be local.
 const movieService = axios.create({
-  baseURL: getBaseURL(
-    "/api/movies",
-    "VITE_MOVIE_API_URL",
-    "https://streamverse-movie-service.onrender.com/api/movies"
-  ),
+  baseURL: isProduction
+    ? getBaseURL(
+        "/api/movies",
+        "VITE_MOVIE_API_URL",
+        "https://streamverse-movie-service.onrender.com/api/movies"
+      )
+    : (import.meta.env.VITE_MOVIE_API_URL || "https://movie-service-285531167611.us-central1.run.app/api/movies"),
 });
 
 // Build user service baseURL with safeguard for legacy '/api/users' path
@@ -51,11 +55,13 @@ const franchiseService = axios.create({
 });
 
 const additionalService = axios.create({
-  baseURL: getBaseURL(
-    "/api/additional",
-    "VITE_ADDITIONAL_API_URL",
-    "https://backend-additionalservice-v0.onrender.com/api/additional"
-  ),
+  baseURL: isProduction
+    ? getBaseURL(
+        "/api/additional",
+        "VITE_ADDITIONAL_API_URL",
+        "https://backend-additionalservice-v0.onrender.com/api/additional"
+      )
+    : (import.meta.env.VITE_ADDITIONAL_API_URL || "http://localhost:4004/api/additional"),
 });
 
 const recommendationService = axios.create({
@@ -86,10 +92,28 @@ const services = [
 // Attach interceptors for auth and 401 handling
 services.forEach((service) => {
   service.interceptors.request.use(async (config) => {
-    const user = getAuth().currentUser;
+    // If auth isn't ready yet (currentUser null) wait briefly for it to initialize.
+    // This reduces race conditions where components make requests before onAuthStateChanged fires.
+    let user = getAuth().currentUser;
+    if (!user) {
+      // Wait up to 2 seconds for auth state to become available, polling briefly.
+      const start = Date.now();
+      while (!user && Date.now() - start < 2000) {
+        // small delay
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((r) => setTimeout(r, 100));
+        user = getAuth().currentUser;
+      }
+    }
     if (user) {
-      const token = await user.getIdToken(true);
-      config.headers.Authorization = `Bearer ${token}`;
+      try {
+        const token = await user.getIdToken(true);
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+      } catch (err) {
+        // If token retrieval fails, continue without token so error handling can occur normally
+        console.warn('Failed to obtain ID token for request:', err && err.message ? err.message : err);
+      }
     }
     return config;
   });

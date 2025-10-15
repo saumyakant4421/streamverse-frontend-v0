@@ -196,9 +196,45 @@
       }
 
       .movie-search-container {
+        display: block;
         .search-results {
           z-index: 1000;
           max-height: 230px;
+        }
+        .search-flex-row {
+          display: flex;
+          gap: 12px;
+          align-items: flex-start;
+
+          > div {
+            flex: 1 1 0;
+          }
+        }
+        .invited-users-row {
+          margin-top: 8px;
+        }
+        .selected-users {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .user-pill {
+          display: inline-flex;
+          align-items: center;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(59,130,246,0.15);
+          padding: 6px 10px;
+          border-radius: 16px;
+          color: #e5e9f0;
+          font-weight: 500;
+
+          .remove-user-btn {
+            margin-left: 8px;
+            background: transparent;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+          }
         }
         .selected-movies {
           display: flex;

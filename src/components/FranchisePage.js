@@ -32,11 +32,11 @@ const FranchisePage = () => {
     fetchFranchise();
   }, [collectionId]);
 
-  useEffect(() => {
-    if (franchise) {
+  // useEffect(() => {
+  //   if (franchise) {
       
-    }
-  }, [franchise]);
+  //   }
+  // }, [franchise]);
 
   const handleImageError = (e) => {
     const placeholderPath = `${

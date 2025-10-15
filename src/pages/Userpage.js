@@ -122,9 +122,9 @@ const UserPage = () => {
           >
             Account Settings
           </button>
-          <button onClick={() => navigate("/social")} className="social-btn">
+          {/* <button onClick={() => navigate("/social")} className="social-btn">
             Socials
-          </button>
+          </button> */}
           <button onClick={() => navigate("/")} className="home-btn">
             Back to Home
           </button>

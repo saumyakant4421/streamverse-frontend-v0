@@ -33,6 +33,17 @@ const Navbar = () => {
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <Link to="/" className="logo">Streamverse</Link>
+
+      {/* Hidden checkbox that controls the CSS-only mobile menu */}
+      <input type="checkbox" id="nav-toggle" aria-hidden="true" />
+
+      {/* Hamburger button wrapper (visible on small screens via CSS) */}
+      <div className="nav-toggle-wrapper">
+        <label className="nav-toggle" htmlFor="nav-toggle" aria-label="Toggle navigation">
+          <span className="bar" />
+        </label>
+      </div>
+
       <div className="nav-links">
         <Link 
           to="/" 
@@ -62,6 +73,50 @@ const Navbar = () => {
           <FaRobot />
           <span>Movie AI</span>
         </Link>
+      </div>
+
+      {/* Mobile menu: duplicated links and a compact action area for small screens
+          Visible when #nav-toggle is checked (pure CSS). */}
+      <div className="mobile-menu" aria-hidden="true">
+        <nav className="nav-links">
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>
+            <FaHome />
+            <span>Home</span>
+          </Link>
+          <Link to="/franchises" className={`nav-link ${location.pathname === '/franchises' ? 'active' : ''}`}>
+            <FaFilm />
+            <span>Explore Franchises</span>
+          </Link>
+          <Link to="/tools" className={`nav-link ${location.pathname === '/tools' ? 'active' : ''}`}>
+            <FaTools />
+            <span>Tools</span>
+          </Link>
+          <Link to="/recommendations" className={`nav-link tool-button ${location.pathname === '/recommendations' ? 'active' : ''}`}>
+            <FaRobot />
+            <span>Movie AI</span>
+          </Link>
+        </nav>
+        <div className="mobile-actions" style={{ marginTop: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
+          <button onClick={toggleDarkMode} className="dark-mode-toggle" type="button" aria-hidden="true">
+            {isDarkMode ? <MdSunny /> : <FaMoon />}
+          </button>
+          <button
+            className="notification-bell"
+            type="button"
+            aria-label="Notifications"
+            onClick={() => setShowNotifications((prev) => !prev)}
+            style={{ marginRight: '8px' }}
+          >
+            <FaBell />
+          </button>
+          <Link to="/user" className="profile-icon" aria-hidden="true">
+            {user && user.photoURL ? (
+              <img src={user.photoURL} alt="Profile" className="profile-avatar" />
+            ) : (
+              <FaUser />
+            )}
+          </Link>
+        </div>
       </div>
       <div className="nav-right">
         <button onClick={toggleDarkMode} className="dark-mode-toggle" type="button">

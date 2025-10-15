@@ -39,6 +39,7 @@ const WatchPartyPlanner = () => {
     selectedMovies: [],
     isPublic: false,
     invitedUserIds: [],
+    invitedUsers: [], // store selected user objects { id, username }
   });
   const calendarRef = useRef(null);
 
@@ -533,10 +534,30 @@ const WatchPartyPlanner = () => {
             required
           />
           <div className="movie-search-container">
-            <WatchPartySearchBar
-              placeholder="Search for movies..."
-              onMovieSelect={handleMovieSelect}
-            />
+            <div className="search-flex-row">
+              <WatchPartySearchBar
+                placeholder="Search for movies..."
+                onMovieSelect={handleMovieSelect}
+              />
+              <WatchPartySearchBar
+                placeholder="Invite users by username..."
+                onMovieSelect={(user) => {
+                  // user object expected: { id, username }
+                  if (!user || !user.username) return;
+                  if (form.invitedUsers.some((u) => u.username === user.username)) {
+                    toast.info('User already invited');
+                    return;
+                  }
+                  setForm({
+                    ...form,
+                    invitedUsers: [...form.invitedUsers, { id: user.id, username: user.username }],
+                    invitedUserIds: [...form.invitedUserIds, user.id],
+                  });
+                }}
+                searchPath="/users/search"
+                resultType="user"
+              />
+            </div>
             {form.selectedMovies.length > 0 && (
               <div className="selected-movies">
                 {form.selectedMovies.map((movie) => (
@@ -562,20 +583,45 @@ const WatchPartyPlanner = () => {
             />
             Public Watch Party
           </label>
-          <input
-            type="text"
-            placeholder="Invite User IDs (comma-separated)"
-            value={form.invitedUserIds.join(",")}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                invitedUserIds: e.target.value
-                  .split(",")
-                  .map((id) => id.trim())
-                  .filter((id) => id),
-              })
-            }
-          />
+          <div className="invited-users-row">
+            {form.invitedUsers.length > 0 ? (
+              <div className="selected-users">
+                {form.invitedUsers.map((u) => (
+                  <div key={u.id} className="user-pill">
+                    <span>{u.username}</span>
+                    <button
+                      type="button"
+                      className="remove-user-btn"
+                      onClick={() => {
+                        setForm({
+                          ...form,
+                          invitedUsers: form.invitedUsers.filter((x) => x.id !== u.id),
+                          invitedUserIds: form.invitedUserIds.filter((id) => id !== u.id),
+                        });
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <input
+                type="text"
+                placeholder="Invite User IDs (comma-separated)"
+                value={form.invitedUserIds.join(",")}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    invitedUserIds: e.target.value
+                      .split(",")
+                      .map((id) => id.trim())
+                      .filter((id) => id),
+                  })
+                }
+              />
+            )}
+          </div>
           <button type="submit" disabled={loading}>
             Create Party
           </button>

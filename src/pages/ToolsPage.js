@@ -26,12 +26,12 @@ const ToolsPage = () => {
       description: 'Search and add up to 30 movies to your marathon bucket, then calculate the total runtime to plan your viewing time.',
       component: <MovieMarathonPlanner />,
     },
-    {
-      id: 'watch-party-planner',
-      title: 'Watch Party Scheduler',
-      description: 'Plan watch parties with friends, schedule movies on a calendar, and chat in real-time with pinned movie details.',
-      component: <WatchPartyPlanner />,
-    },
+    // {
+    //   id: 'watch-party-planner',
+    //   title: 'Watch Party Scheduler',
+    //   description: 'Plan watch parties with friends, schedule movies on a calendar, and chat in real-time with pinned movie details.',
+    //   component: <WatchPartyPlanner />,
+    // },
   ];
 
   return (

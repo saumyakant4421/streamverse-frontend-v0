@@ -8,6 +8,7 @@
   color: #e5e9f0;
   font-family: 'Inter', 'Segoe UI', sans-serif;
   display: flex;
+  overflow-x: hidden; 
 
   &::before {
     content: '';
@@ -674,12 +675,13 @@
 
   /* Responsive Styles */
   @media (max-width: 992px) {
+    /* slightly reduce sidebar width on medium screens to give content more room */
     .sidebar {
-      width: 280px;
+      width: 240px;
     }
 
     .content {
-      margin-left: 280px;
+      margin-left: 240px;
 
       .movie-list {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -735,12 +737,16 @@
 
       .menu {
         flex-direction: row;
-        flex-wrap: wrap;
+        flex-wrap: nowrap; /* allow horizontal scrolling instead of awkward wrapping */
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 8px;
 
         button {
-          flex: 1;
+          flex: 0 0 auto;
+          min-width: 110px; /* keep buttons tappable and readable */
           text-align: center;
-          padding: 10px;
+          padding: 10px 12px;
 
           &.active::after {
             top: auto;
@@ -814,6 +820,7 @@
         button {
           font-size: 13px;
           padding: 8px;
+          min-width: 90px;
         }
       }
     }

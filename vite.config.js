@@ -17,15 +17,26 @@ export default defineConfig(({ mode }) => {
   const userTarget = useLocal
     ? 'https://backend-userservice-v0.onrender.com'
     : 'https://backend-userservice-v0.onrender.com';
-  // Prefer local additional service during development or when VITE_USE_LOCAL_API=true
-  const additionalTarget = useLocal || mode === 'development'
-    ? 'http://localhost:5004'
-    : 'https://backend-additionalservice-v0.onrender.com';
+  // Use local additional service only when explicitly configured via VITE_USE_LOCAL_API
+  let additionalTarget;
+  if (useLocal && env.VITE_ADDITIONAL_API_URL) {
+    try {
+      // derive origin from the provided URL so proxy uses host:port
+      additionalTarget = new URL(env.VITE_ADDITIONAL_API_URL).origin;
+    } catch (err) {
+      // if it's not a full URL, fallback to raw value or default
+      additionalTarget = env.VITE_ADDITIONAL_API_URL.replace(/\/$/, '') || 'http://localhost:4004';
+    }
+  } else if (useLocal) {
+    additionalTarget = 'http://localhost:4004';
+  } else {
+    additionalTarget = 'https://backend-additionalservice-v0.onrender.com';
+  }
 
-  // Recommend and social are always local (not deployed)
+  // Recommend is local by design; other targets follow additionalTarget when relevant
   const recommendTarget = 'http://localhost:4002';
-  const watchPartyTarget = 'http://localhost:4004';
-  const marathonTarget = 'http://localhost:4004';
+  const watchPartyTarget = additionalTarget;
+  const marathonTarget = additionalTarget;
 
   return {
     plugins: [

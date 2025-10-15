@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { toast } from "react-hot-toast";
 import "../styles/searchbar.scss";
 
-const WatchPartySearchBar = ({ onMovieSelect }) => {
+const WatchPartySearchBar = ({ onMovieSelect, placeholder, searchPath = '/search', resultType = 'movie' }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
@@ -25,8 +25,9 @@ const WatchPartySearchBar = ({ onMovieSelect }) => {
 
     const searchMovies = async () => {
       try {
-        const response = await watchPartyService.get("/search", {
-          params: { query: searchQuery },
+        const params = resultType === 'user' ? { q: searchQuery } : { query: searchQuery };
+        const response = await watchPartyService.get(searchPath, {
+          params,
           signal: abortController.signal,
         });
         setSearchResults(response.data || []);
@@ -135,14 +136,14 @@ const WatchPartySearchBar = ({ onMovieSelect }) => {
     <div className="search-container">
       <input
         type="text"
-        placeholder="Search movies for watch party..."
+        placeholder={placeholder || (resultType === 'user' ? 'Search users by username...' : 'Search movies for watch party...')}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         onFocus={handleSearchFocus}
         onBlur={handleSearchBlur}
         className="search-input"
       />
-      <FaSearch className="search-icon" />
+      {/* <FaSearch className="search-icon" /> */}
       {searchQuery && (
         <button className="clear-search" onClick={handleCloseSearch}>
           ×
@@ -153,11 +154,11 @@ const WatchPartySearchBar = ({ onMovieSelect }) => {
           {isSearchLoading ? (
             <div className="search-loading">Searching...</div>
           ) : searchResults.length > 0 ? (
-            searchResults.slice(0, 5).map((movie) => (
-              <SearchResultCard key={movie.id} movie={movie} />
+            searchResults.slice(0, 6).map((item) => (
+              <SearchResultCard key={item.id || item.username} movie={item} />
             ))
           ) : searchQuery.trim().length >= 2 ? (
-            <div className="no-results">No movies found</div>
+            <div className="no-results">No results found</div>
           ) : null}
         </div>
       )}
