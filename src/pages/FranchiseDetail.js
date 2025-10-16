@@ -24,22 +24,43 @@ const FallbackNavbar = () => (
 // Fallback image (use an existing public asset)
 const FALLBACK_POSTER = "/franchises/wallpaperflare.com_wallpaper.jpg";
 
+// Responsive hook to determine items per view
+const useViewportItems = (breakpoints = { large: 1200, medium: 768 }) => {
+  const getItems = () => {
+    if (typeof window === "undefined") return 5;
+    const w = window.innerWidth;
+    if (w >= breakpoints.large) return 5;
+    if (w >= breakpoints.medium) return 3;
+    return 1;
+  };
+
+  const [itemsPerView, setItemsPerView] = useState(getItems);
+
+  useEffect(() => {
+    const onResize = () => {
+      const next = getItems();
+      setItemsPerView((cur) => (cur !== next ? next : cur));
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [breakpoints]);
+
+  return itemsPerView;
+};
+
 const FranchiseTimeline = ({ movies }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerView = 5;
+  const itemsPerView = useViewportItems();
   const maxIndex = Math.max(0, movies.length - itemsPerView);
-  const initialActiveIndex = movies.length >= 3 ? 2 : movies.length - 1;
+  const initialActiveIndex = movies.length >= Math.ceil(itemsPerView / 2) ? Math.floor(itemsPerView / 2) : movies.length - 1;
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
   useEffect(() => {
-    let newActiveIndex = currentIndex + 2;
-    if (newActiveIndex < 0) {
-      newActiveIndex = 0;
-    } else if (newActiveIndex >= movies.length) {
-      newActiveIndex = movies.length - 1;
-    }
+    let newActiveIndex = currentIndex + Math.floor(itemsPerView / 2);
+    if (newActiveIndex < 0) newActiveIndex = 0;
+    else if (newActiveIndex >= movies.length) newActiveIndex = movies.length - 1;
     setActiveIndex(newActiveIndex);
-  }, [currentIndex, movies.length]);
+  }, [currentIndex, movies.length, itemsPerView]);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
@@ -49,19 +70,17 @@ const FranchiseTimeline = ({ movies }) => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleMouseEnter = (index) => {
-    setActiveIndex(index);
-  };
+  const handleMouseEnter = (index) => setActiveIndex(index);
 
   const handleMouseLeave = () => {
-    let newActiveIndex = currentIndex + 2;
-    if (newActiveIndex < 0) {
-      newActiveIndex = 0;
-    } else if (newActiveIndex >= movies.length) {
-      newActiveIndex = movies.length - 1;
-    }
+    let newActiveIndex = currentIndex + Math.floor(itemsPerView / 2);
+    if (newActiveIndex < 0) newActiveIndex = 0;
+    else if (newActiveIndex >= movies.length) newActiveIndex = movies.length - 1;
     setActiveIndex(newActiveIndex);
   };
+
+  // detect touch-capable devices
+  const isTouchDevice = typeof window !== "undefined" && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
   if (!movies || movies.length === 0) {
     return <p className="fd-no-results">No movies available</p>;
@@ -86,6 +105,14 @@ const FranchiseTimeline = ({ movies }) => {
               style={{ flex: `0 0 ${100 / itemsPerView}%` }}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
+              onClick={(e) => {
+                // on touch devices, first tap reveals the tile (prevents immediate navigation)
+                if (isTouchDevice && activeIndex !== index) {
+                  e.preventDefault();
+                  setActiveIndex(index);
+                }
+                // otherwise allow navigation
+              }}
             >
               <div className="fd-timeline-marker"></div>
               <div className="fd-timeline-content">

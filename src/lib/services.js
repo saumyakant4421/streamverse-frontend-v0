@@ -42,8 +42,9 @@ const userService = axios.create({
 });
 
 // Build franchise service base URL and ensure it always targets the '/api/franchises' path.
+// Prefer explicit env var, otherwise use the deployed Render URL (do not default to localhost)
 let _franchiseBase = import.meta.env.VITE_FRANCHISE_API_URL ||
-  (useLocal ? "http://localhost:5003/api/franchises" : "https://franchise-service-285531167611.us-central1.run.app/api/franchises");
+  "https://backend-additionalservice-v0.onrender.com/api/franchises";
 // Trim trailing slashes
 _franchiseBase = _franchiseBase.replace(/\/+$/, '');
 // If the provided value doesn't already include the '/api/franchises' path, append it.

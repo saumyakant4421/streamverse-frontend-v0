@@ -120,7 +120,7 @@ $glass-shadow: rgba(0, 0, 0, 0.1);
 .letter {
   font-family: 'DM Sans', sans-serif;
   font-size: 36px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   position: relative;
   animation: float 5s ease-in-out infinite;
@@ -295,6 +295,6 @@ $glass-shadow: rgba(0, 0, 0, 0.1);
 @media (min-width: 1400px) {
   /* slightly larger typography on very large screens */
   .glassmorphic-container { padding: 48px 90px; }
-  .letter { font-size: 48px; }
+  .letter { font-size: 38px; }
   .loading-effect { width: 320px; }
 }

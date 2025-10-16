@@ -79,7 +79,7 @@ $navbar-height: 60px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.5;
   overflow-x: hidden;
-  overflow-y: hidden; // Changed to auto to allow scrolling
+  overflow-y: auto; // allow vertical scrolling
   scroll-behavior: smooth; // Enable smooth scrolling for the page
 
   &::before {
@@ -819,7 +819,7 @@ $navbar-height: 60px;
   .fd-franchise-details {
     &.fd-timeline-section {
       .fd-timeline-container {
-        height: 300px;
+        height: auto;
         width: 100%;
         padding: 0.5rem 0;
 
@@ -842,8 +842,12 @@ $navbar-height: 60px;
           }
 
           .fd-timeline-tile {
-            top: 0;
-            padding: 0.5rem;
+            /* make tiles visible and stacked on touch / small screens */
+            position: static;
+            transform: none;
+            opacity: 1;
+            pointer-events: auto;
+            margin-top: 0.5rem;
 
             .fd-timeline-poster {
               width: 100px;
@@ -913,4 +917,93 @@ $navbar-height: 60px;
       }
     }
   }
+}
+
+/* Extra-small devices (phones) - tighten spacing and make heights flexible */
+@media (max-width: 480px) {
+  .fd-navbar {
+    height: 48px;
+    padding: 0 0.75rem;
+    right: 0; /* ensure hamburger isn't clipped by a large right offset */
+    z-index: 1200;
+  }
+
+  .fd-franchise-header {
+    height: 48vh; /* reduce header height on small devices */
+
+    .fd-header-content {
+      padding: 1rem 0.75rem;
+
+      .fd-backdrop-title {
+        font-size: 1.6rem !important;
+        line-height: 1.2;
+        margin: 4.5rem 0 0.75rem 0 !important; /* reduce the large top margin used on desktop */
+        word-break: break-word;
+      }
+
+      .fd-franchise-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  }
+
+  /* Timeline: use auto heights and smaller posters to avoid clipping */
+  .fd-franchise-details.fd-timeline-section {
+    .fd-timeline-container {
+      height: auto;
+      min-height: 220px;
+      padding: 0.5rem 0.25rem;
+
+      .fd-timeline-item {
+        height: auto;
+        padding: 0 0.5rem;
+
+        .fd-timeline-node {
+          max-width: 130px;
+          bottom: 12px;
+          padding: 0.5rem;
+        }
+
+        .fd-timeline-tile {
+          position: static;
+          transform: none;
+          opacity: 1;
+          pointer-events: auto;
+          margin-top: 0.5rem;
+
+          .fd-timeline-poster {
+            width: 84px;
+            height: 120px;
+          }
+        }
+
+        .fd-timeline-connector { display: none; }
+      }
+    }
+  }
+
+  /* Carousel: make items wider (take more relative space) so fewer columns show and text is legible */
+  .fd-franchise-details.fd-cast-section,
+  .fd-franchise-details.fd-directors-section {
+    .fd-carousel-wrapper {
+      .fd-carousel-track {
+        .fd-carousel-item {
+          flex: 0 0 45%; /* ~2 items visible per row */
+          padding: 0 0.25rem;
+        }
+      }
+    }
+  }
+
+  /* Movies grid: slightly larger tiles for touch targets */
+  .fd-franchise-details.fd-movies-section {
+    .fd-movies-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  }
+
+  /* Ensure long backdrops or orbs don't overflow horizontally */
+  .fd-orb, .fd-orb-large { display: none !important; }
+
+  /* Small fixes for the back link and buttons */
+  .fd-back-link { margin: 0.5rem 0; font-size: 0.95rem; }
 }

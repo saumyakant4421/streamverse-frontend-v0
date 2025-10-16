@@ -2,7 +2,7 @@
 
 // Theme Variables
 $primary-color: #e50914; // Netflix-inspired red
-$accent-color: #2e6bff; // Blue for interactive elements
+$accent-color: #f0f1f5; // Blue for interactive elements
 $bg-dark: #0f0f0f;
 $card-bg: rgba(255, 255, 255, 0.05);
 $text-primary: #ffffff;
@@ -113,33 +113,37 @@ $desktop: 1200px;
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    background: linear-gradient(145deg, $neon-glow, $neon-pink);
-    border: 1px solid $border-color;
+    /* Make back-to-home a white button with black text as requested */
+    background: #dcdcdc;
+    color: #000000;
+    border: 1px solid rgba(0,0,0,0.08);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba($neon-glow, 0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     cursor: pointer;
     transition: $transition;
     font-family: $font-stack;
     font-size: 16px;
     font-weight: 500;
-    color: $text-primary;
     text-decoration: none;
 
     .arrow-icon {
       font-size: 20px;
-      color: $text-primary;
+      color: rgb(40, 34, 34);
       transition: $transition;
     }
 
     &:hover {
-      background: linear-gradient(145deg, $neon-pink, $neon-glow);
+      background: #ffffff;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba($neon-glow, 0.5);
-      animation: neon-flicker 1.5s infinite;
-
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
       .arrow-icon {
         transform: translateX(-4px);
       }
+    }
+
+    &:focus {
+      outline: 3px solid rgba(0,0,0,0.08);
+      outline-offset: 2px;
     }
   }
 
@@ -268,7 +272,7 @@ $desktop: 1200px;
         animation: fadeIn 0.3s ease;
 
         .user-avatar {
-          background-color: $accent-color;
+          background-color: rgb(94, 94, 94);
           color: $text-primary;
           border-radius: 50%;
           width: 32px;
@@ -283,11 +287,11 @@ $desktop: 1200px;
         }
 
         .user-message-bubble {
-          background-color: rgba($accent-color, 0.2);
+          background-color: rgb(227, 227, 227);
           padding: 0.75rem;
           border-radius: 0.5rem;
           max-width: 70%;
-          color: $text-primary;
+          color: rgb(212, 207, 207);
           align-self: flex-end;
           text-align: right;
 
@@ -297,8 +301,7 @@ $desktop: 1200px;
 
           .text-xs {
             font-size: 0.75rem;
-            color: $text-secondary;
-            margin-top: 0.25rem;
+            margin-top: 0.15rem;
           }
         }
       }
@@ -311,6 +314,7 @@ $desktop: 1200px;
         animation: fadeIn 0.3s ease;
 
         .bot-avatar {
+          // background-color: $primary-color;
           background-color: color.adjust($bg-dark, $lightness: 10%);
           color: $text-primary;
           border-radius: 50%;
@@ -336,6 +340,7 @@ $desktop: 1200px;
 
           p {
             margin: 0 0 0.5rem;
+            color: rgb(162, 159, 159);
           }
 
           .text-xs {
@@ -379,21 +384,27 @@ $desktop: 1200px;
         align-items: center;
         gap: 8px;
         padding: 0.75rem 1.5rem;
-        background: linear-gradient(145deg, $neon-glow, $neon-pink);
-        border: none;
+        /* White background, black text */
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.08);
+        border-left: none;
         border-radius: 0 0.5rem 0.5rem 0;
-        color: $text-primary;
+        color: #000000;
         font-size: 1rem;
         font-weight: 500;
         cursor: pointer;
         transition: $transition;
-        box-shadow: 0 4px 12px rgba($neon-glow, 0.3);
-        animation: neon-flicker 1.5s infinite;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 
         &:hover:not(:disabled) {
-          background: linear-gradient(145deg, $neon-pink, $neon-glow);
+          background: #f6f6f6;
           transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba($neon-glow, 0.5);
+          box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        &:focus {
+          outline: 3px solid rgba(0,0,0,0.08);
+          outline-offset: 2px;
         }
 
         &:disabled {
