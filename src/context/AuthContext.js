@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Initialize dark mode from localStorage or default to false (light mode)
-    return localStorage.getItem("theme") === "dark";
+    return true;
   });
 
   // Update document class and localStorage when dark mode changes
