@@ -2,9 +2,9 @@
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 
-// Toggle for using local or remote (Render) services
+// Respect Vite environment variables
 const useLocal = import.meta.env.VITE_USE_LOCAL_API === 'true';
-const isProduction = import.meta.env.PROD;
+const isProduction = import.meta.env.PROD === true || import.meta.env.MODE === 'production';
 
 // Helper to choose baseURL for each service
 function getBaseURL(localPath, remoteEnvVar, remoteDefault) {
@@ -15,9 +15,7 @@ function getBaseURL(localPath, remoteEnvVar, remoteDefault) {
   }
 }
 
-// All service instances
-// When running locally (not production), use the deployed movie-service run.app URL directly
-// This ensures the frontend talks to the hosted movie service while other services may be local.
+
 const movieService = axios.create({
   baseURL: isProduction
     ? getBaseURL(
@@ -41,13 +39,11 @@ const userService = axios.create({
   baseURL: userBase,
 });
 
-// Build franchise service base URL and ensure it always targets the '/api/franchises' path.
-// Prefer explicit env var, otherwise use the deployed Render URL (do not default to localhost)
+
 let _franchiseBase = import.meta.env.VITE_FRANCHISE_API_URL ||
-  "https://backend-additionalservice-v0.onrender.com/api/franchises";
+  "https://franchise-service-285531167611.us-central1.run.app/api/franchises";
 // Trim trailing slashes
 _franchiseBase = _franchiseBase.replace(/\/+$/, '');
-// If the provided value doesn't already include the '/api/franchises' path, append it.
 if (!/\/api\/franchises(\/?$)/.test(_franchiseBase)) {
   _franchiseBase = _franchiseBase + '/api/franchises';
 }
@@ -72,11 +68,15 @@ const recommendationService = axios.create({
     "https://recommendation-api-127j.onrender.com/api/recommendations"
   ),
 });
+// Watch party & marathon services: prefer explicit env var, otherwise use local additional-service or deployed Render URL
+const watchPartyBase = import.meta.env.VITE_WATCHPARTY_API_URL || (useLocal ? "http://localhost:4004/api/tools/watchparty" : "https://backend-additionalservice-v0.onrender.com/api/tools/watchparty");
+const marathonBase = import.meta.env.VITE_MARATHON_API_URL || (useLocal ? "http://localhost:4004/api/tools/marathon" : "https://backend-additionalservice-v0.onrender.com/api/tools/marathon");
+
 const watchPartyService = axios.create({
-  baseURL: "/api/tools/watchparty",
+  baseURL: watchPartyBase,
 });
 const marathonService = axios.create({
-  baseURL: "/api/tools/marathon",
+  baseURL: marathonBase,
 });
 // Add socialService here if needed
 
@@ -93,15 +93,10 @@ const services = [
 // Attach interceptors for auth and 401 handling
 services.forEach((service) => {
   service.interceptors.request.use(async (config) => {
-    // If auth isn't ready yet (currentUser null) wait briefly for it to initialize.
-    // This reduces race conditions where components make requests before onAuthStateChanged fires.
     let user = getAuth().currentUser;
     if (!user) {
-      // Wait up to 2 seconds for auth state to become available, polling briefly.
       const start = Date.now();
       while (!user && Date.now() - start < 2000) {
-        // small delay
-        // eslint-disable-next-line no-await-in-loop
         await new Promise((r) => setTimeout(r, 100));
         user = getAuth().currentUser;
       }
@@ -112,7 +107,6 @@ services.forEach((service) => {
         config.headers = config.headers || {};
         config.headers.Authorization = `Bearer ${token}`;
       } catch (err) {
-        // If token retrieval fails, continue without token so error handling can occur normally
         console.warn('Failed to obtain ID token for request:', err && err.message ? err.message : err);
       }
     }
@@ -123,7 +117,6 @@ services.forEach((service) => {
     response => response,
     async error => {
       if (error.response && error.response.status === 401) {
-        // Log out user and redirect to login
         const { signOut } = await import("firebase/auth");
         await signOut(getAuth());
         window.location.href = "/login";
