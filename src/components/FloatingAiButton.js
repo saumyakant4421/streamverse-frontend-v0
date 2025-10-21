@@ -10,7 +10,7 @@ const FloatingAiButton = () => {
 
   return (
     <Link to="/recommendations" className="floating-ai-button" aria-label="Open recommendations">
-  <img src="/assets/icons/icons8-ai-48.png" alt="AI" />
+    <img src="/assets/icons/icons8-ai-48.png" alt="AI" />
     </Link>
   );
 };
