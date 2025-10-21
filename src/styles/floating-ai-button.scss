@@ -1,0 +1,91 @@
+.floating-ai-button {
+	position: fixed;
+	right: 3rem;
+	bottom: 1.5rem;
+	z-index: 1000;
+	
+	/* Dark theme matching the app */
+	background: rgba(233, 220, 220, 0.85);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	
+	/* Subtle border matching the UI elements */
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 50%;
+	
+	/* Soft shadow for depth */
+	box-shadow: 
+		0 4px 20px rgba(0, 0, 0, 0.5),
+		inset 0 1px 0 rgba(255, 255, 255, 0.03);
+	
+	padding: 0.75rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.3s ease;
+	cursor: pointer;
+	
+	/* Subtle breathing glow */
+	animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+	0%, 100% {
+		border-color: rgba(255, 255, 255, 0.08);
+		box-shadow: 
+			0 4px 20px rgba(0, 0, 0, 0.5),
+			inset 0 1px 0 rgba(255, 255, 255, 0.03);
+	}
+	50% {
+		border-color: rgba(255, 255, 255, 0.15);
+		box-shadow: 
+			0 4px 20px rgba(0, 0, 0, 0.5),
+			inset 0 1px 0 rgba(255, 255, 255, 0.05),
+			0 0 12px rgba(255, 255, 255, 0.06);
+	}
+}
+
+.floating-ai-button:hover {
+	background: rgba(217, 218, 219, 0.9);
+	border-color: rgba(169, 169, 169, 0.2);
+	box-shadow: 
+		0 6px 28px rgba(0, 0, 0, 0.6),
+		inset 0 1px 0 rgba(255, 255, 255, 0.08),
+		0 0 16px rgba(255, 255, 255, 0.1);
+	transform: translateY(-2px) scale(1.05);
+	animation: none;
+}
+
+.floating-ai-button:active {
+	transform: translateY(0) scale(1);
+	box-shadow: 
+		0 2px 12px rgba(0, 0, 0, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.floating-ai-button img {
+	width: 32px;
+	height: 32px;
+	object-fit: contain;
+	display: block;
+	opacity: 0.9;
+	transition: all 0.3s ease;
+}
+
+.floating-ai-button:hover img {
+	opacity: 1;
+	transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+	.floating-ai-button {
+		right: 1rem;
+		bottom: 1rem;
+		padding: 0.5rem;
+	}
+	
+	.floating-ai-button img {
+		width: 24px;
+		height: 24px;
+	}
+}

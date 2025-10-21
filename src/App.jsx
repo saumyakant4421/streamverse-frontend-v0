@@ -22,10 +22,14 @@ const ProtectedRoute = ({ children }) => {
   return user ? children : <Navigate to="/login" />;
 };
 
+
+import FloatingAiButton from "./components/FloatingAiButton";
+
 function App() {
   return (
     <AuthProvider>
       <Toaster position="top-right" />
+      <FloatingAiButton />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

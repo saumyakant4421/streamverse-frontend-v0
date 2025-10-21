@@ -16,6 +16,8 @@ import {
 import Navbar from "./Navbar.js";
 import SearchBar from "../components/SearchBar";
 import "../styles/homepage.scss";
+import "../styles/skeleton-movie-card.scss";
+import SkeletonMovieCard from "../components/SkeletonMovieCard";
 // Import services instead of api
 import { movieService, userService } from "../lib/services";
 
@@ -237,7 +239,11 @@ const Homepage = () => {
           <div className="genre-movies">
             <h3>{selectedGenre} Movies</h3>
             {loading ? (
-              <p className="empty-watchlist">Loading movies...</p>
+              <div className="movie-grid">
+                {Array.from({ length: 8 }).map((_, idx) => (
+                  <SkeletonMovieCard key={idx} />
+                ))}
+              </div>
             ) : genreMovies[selectedGenre]?.length > 0 ? (
               <div className="movie-grid">
                 {genreMovies[selectedGenre].map((movie) => (

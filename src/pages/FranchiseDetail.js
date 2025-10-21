@@ -22,7 +22,7 @@ const FallbackNavbar = () => (
 );
 
 // Fallback image (use an existing public asset)
-const FALLBACK_POSTER = "/franchises/wallpaperflare.com_wallpaper.jpg";
+const FALLBACK_POSTER = "/franchises/No-Image-Placeholder.svg.png";
 
 // Responsive hook to determine items per view
 const useViewportItems = (breakpoints = { large: 1200, medium: 768 }) => {
@@ -133,7 +133,7 @@ const FranchiseTimeline = ({ movies }) => {
                           : movie.poster_path.startsWith("/assets/")
                             ? movie.poster_path
                             : `https://image.tmdb.org/t/p/w200${movie.poster_path}`
-: "/franchises/wallpaperflare.com_wallpaper.jpg"
+: "/franchises/No-Image-Placeholder.svg.png"
                     }
                     alt={movie.title}
                     className="fd-timeline-poster"

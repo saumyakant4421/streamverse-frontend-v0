@@ -79,8 +79,8 @@ $navbar-height: 60px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.5;
   overflow-x: hidden;
-  overflow-y: auto; // allow vertical scrolling
-  scroll-behavior: smooth; // Enable smooth scrolling for the page
+  overflow-y: hidden;
+  // scroll-behavior: smooth; // Enable smooth scrolling for the page
 
   &::before {
     content: '';
