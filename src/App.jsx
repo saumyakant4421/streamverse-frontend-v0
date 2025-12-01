@@ -24,8 +24,11 @@ const ProtectedRoute = ({ children }) => {
 
 
 import FloatingAiButton from "./components/FloatingAiButton";
+import Maintenance from "./components/fallback/Maintenance";
 
 function App() {
+  const MAINTENANCE = true; // set to `false` to disable maintenance mode
+  if (MAINTENANCE) return <Maintenance />;
   return (
     <AuthProvider>
       <Toaster position="top-right" />
