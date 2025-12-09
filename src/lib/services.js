@@ -4,79 +4,76 @@ import { getAuth } from "firebase/auth";
 
 // Respect Vite environment variables
 const useLocal = import.meta.env.VITE_USE_LOCAL_API === 'true';
-const isProduction = import.meta.env.PROD === true || import.meta.env.MODE === 'production';
+const isDev = import.meta.env.DEV === true;
 
 // Helper to choose baseURL for each service
-function getBaseURL(localPath, remoteEnvVar, remoteDefault) {
-  if (isProduction) {
-    return useLocal ? localPath : (import.meta.env[remoteEnvVar] || remoteDefault);
-  } else {
-    return localPath;
+function getBaseURL(envVar, localDefault, remoteDefault) {
+  // If explicit env var is set, use it
+  if (import.meta.env[envVar]) {
+    return import.meta.env[envVar];
   }
+  // In development, prefer local
+  if (isDev) {
+    return localDefault;
+  }
+  // In production, use remote
+  return remoteDefault;
 }
-
 
 const movieService = axios.create({
-  baseURL: isProduction
-    ? getBaseURL(
-        "/api/movies",
-        "VITE_MOVIE_API_URL",
-        "https://streamverse-movie-service.onrender.com/api/movies"
-      )
-    : (import.meta.env.VITE_MOVIE_API_URL || "https://movie-service-285531167611.us-central1.run.app/api/movies"),
+  baseURL: getBaseURL(
+    "VITE_MOVIE_API_URL",
+    "http://localhost:5002/api/movies",
+    "https://movie-service-285531167611.us-central1.run.app/api/movies"
+  ),
 });
 
-// Build user service baseURL with safeguard for legacy '/api/users' path
-let userBase = getBaseURL(
-  "/api/user",
-  "VITE_USER_API_URL",
-  "https://backend-userservice-v0.onrender.com/api/user"
-);
-if (isProduction && /\/api\/users(\/?$)/.test(userBase)) {
-  userBase = userBase.replace(/\/api\/users(\/?$)/, "/api/user$1");
-}
 const userService = axios.create({
-  baseURL: userBase,
+  baseURL: getBaseURL(
+    "VITE_USER_API_URL",
+    "http://localhost:5001/api/user",
+    "https://backend-userservice-v0.onrender.com/api/user"
+  ),
 });
 
-
-let _franchiseBase = import.meta.env.VITE_FRANCHISE_API_URL ||
-  "https://franchise-service-285531167611.us-central1.run.app/api/franchises";
-// Trim trailing slashes
-_franchiseBase = _franchiseBase.replace(/\/+$/, '');
-if (!/\/api\/franchises(\/?$)/.test(_franchiseBase)) {
-  _franchiseBase = _franchiseBase + '/api/franchises';
-}
 const franchiseService = axios.create({
-  baseURL: _franchiseBase,
+  baseURL: getBaseURL(
+    "VITE_FRANCHISE_API_URL",
+    "http://localhost:5003/api/franchises",
+    "https://franchise-service-285531167611.us-central1.run.app/api/franchises"
+  ),
 });
 
 const additionalService = axios.create({
-  baseURL: isProduction
-    ? getBaseURL(
-        "/api/additional",
-        "VITE_ADDITIONAL_API_URL",
-        "https://backend-additionalservice-v0.onrender.com/api/additional"
-      )
-    : (import.meta.env.VITE_ADDITIONAL_API_URL || "http://localhost:4004/api/additional"),
+  baseURL: getBaseURL(
+    "VITE_ADDITIONAL_API_URL",
+    "http://localhost:4004/api/additional",
+    "https://backend-additionalservice-v0.onrender.com/api/additional"
+  ),
 });
 
 const recommendationService = axios.create({
   baseURL: getBaseURL(
-    "/api/recommendations",
     "VITE_RECOMMENDATION_API_URL",
+    "http://localhost:5004/api/recommendations",
     "https://recommendation-api-127j.onrender.com/api/recommendations"
   ),
 });
-// Watch party & marathon services: prefer explicit env var, otherwise use local additional-service or deployed Render URL
-const watchPartyBase = import.meta.env.VITE_WATCHPARTY_API_URL || (useLocal ? "http://localhost:4004/api/tools/watchparty" : "https://backend-additionalservice-v0.onrender.com/api/tools/watchparty");
-const marathonBase = import.meta.env.VITE_MARATHON_API_URL || (useLocal ? "http://localhost:4004/api/tools/marathon" : "https://backend-additionalservice-v0.onrender.com/api/tools/marathon");
 
 const watchPartyService = axios.create({
-  baseURL: watchPartyBase,
+  baseURL: getBaseURL(
+    "VITE_WATCHPARTY_API_URL",
+    "http://localhost:4004/api/tools/watchparty",
+    "https://backend-additionalservice-v0.onrender.com/api/tools/watchparty"
+  ),
 });
+
 const marathonService = axios.create({
-  baseURL: marathonBase,
+  baseURL: getBaseURL(
+    "VITE_MARATHON_API_URL",
+    "http://localhost:4004/api/tools/marathon",
+    "https://backend-additionalservice-v0.onrender.com/api/tools/marathon"
+  ),
 });
 // Add socialService here if needed
 

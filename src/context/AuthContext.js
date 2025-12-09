@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }) => {
   // Context value including all auth and dark mode functions
   const value = {
     user,
-    setUser, // Included from second version for external user state updates
+    setUser, 
     login,
     logout,
     loading,

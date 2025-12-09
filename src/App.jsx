@@ -13,6 +13,9 @@ import WatchPartyChat from './pages/WatchPartyChat';
 // import SocialPage from './pages/Socials';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import FloatingAiButton from "./components/FloatingAiButton";
+import Maintenance from "./components/fallback/Maintenance";
+
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -23,11 +26,8 @@ const ProtectedRoute = ({ children }) => {
 };
 
 
-import FloatingAiButton from "./components/FloatingAiButton";
-import Maintenance from "./components/fallback/Maintenance";
-
 function App() {
-  const MAINTENANCE = true; // set to `false` to disable maintenance mode
+  const MAINTENANCE = false; // set to `false` to disable maintenance mode
   if (MAINTENANCE) return <Maintenance />;
   return (
     <AuthProvider>

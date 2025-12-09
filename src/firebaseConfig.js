@@ -75,4 +75,4 @@ const sendPasswordReset = async (email) => {
   }
 };
 
-export { app, auth, db, storage, signInWithGoogle, sendPasswordReset }; // Export storage
+export { app, auth, db, storage, signInWithGoogle, sendPasswordReset }; 

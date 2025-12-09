@@ -47,71 +47,37 @@ const FranchiseSearch = () => {
     { name: "Lord of the Rings", id: "lotr", path: "/popularfranchises/lotr" },
   ];
 
-  return (
-    <div className="franchise-search-container">
-      <Navbar />
-      <div className="background-animation">
-        <div className="animated-orb"></div>
-        <div className="animated-orb"></div>
-        <div className="animated-orb"></div>
-      </div>
-      <div className="content-wrapper">
-        {/* Search Collection Section */}
-        <div className="franchise-search">
-          <h2>Explore Movie Franchises</h2>
-          <input
-            type="text"
-            placeholder="Search franchises (e.g., Avengers, Harry Potter)"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="search-input"
-            aria-label="Search for movie franchises"
-          />
-          {isLoading && <div className="loading-spinner">Loading...</div>}
-          <div className="franchise-grid">
-            {franchises.map((franchise, index) => (
-              <Link
-                to={`/franchises/${franchise.id}`}
-                key={franchise.id}
-                className="franchise-card"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                {franchise.poster_path ? (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w200${franchise.poster_path}`}
-                    alt={franchise.name}
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="no-poster">No Image</div>
-                )}
-                <h3>{franchise.name}</h3>
-              </Link>
-            ))}
-          </div>
-          {query && !isLoading && franchises.length === 0 && (
-            <p className="no-results">No franchises found for "{query}"</p>
-          )}
-        </div>
+return (
+  <div className="franchise-search-container">
+    <Navbar />
 
-        {/* Popular Franchises Section */}
-        <div className="popular-franchises">
-          <h2>Popular Franchises</h2>
-          <div className="franchise-buttons">
-            {popularFranchises.map((franchise) => (
-              <Link
-                to={franchise.path}
-                key={franchise.id}
-                className="franchise-button"
-              >
-                {franchise.name}
-              </Link>
-            ))}
-          </div>
+    <div className="background-animation">
+      <div className="animated-orb"></div>
+      <div className="animated-orb"></div>
+      <div className="animated-orb"></div>
+    </div>
+
+    <div className="content-wrapper single-column">
+      {/* Popular Franchises is now the MAIN section */}
+      <div className="popular-franchises main-popular">
+        <h2>Explore Popular Franchises</h2>
+
+        <div className="franchise-buttons glassy-grid">
+          {popularFranchises.map((franchise) => (
+            <Link
+              to={franchise.path}
+              key={franchise.id}
+              className="franchise-button glassy-color"
+            >
+              {franchise.name}
+            </Link>
+          ))}
         </div>
       </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default FranchiseSearch;
